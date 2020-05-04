@@ -1,12 +1,15 @@
 #define FASTLED_ESP8266_RAW_PIN_ORDER
+#define _TASK_SLEEP_ON_IDLE_RUN
 
 #include <FastLED.h>
 #include <TimeLib.h>
+#include <TaskScheduler.h>
 // #include <EEPROM.h>
 #include "eeprom.h"
 #include "timeFunctions.h"
 #include "ntpFunctions.h"
 #include "wifiFunctions.h"
+#include "heartbeat.h"
 
 /*
 int current_mode;
@@ -19,6 +22,12 @@ struct config_t
 } conf;
 */
 
+// Background Tasks and Scheduler
+Scheduler runner;
+Task heartbeat(1000, TASK_FOREVER, &heartbeatCallback, &runner, true);
+Task ntpsync(6000, TASK_FOREVER, &heartbeatCallback, &runner, true); 
+
+
 void setup() {
 	// serial port
 	Serial.begin(115200);
@@ -28,20 +37,24 @@ void setup() {
 
   setupWifi();
   setupLeds();
+  setupHeartbeat();
+  setupNtpClient();
+  updateNtpClient(); // explizit ntprun here in order to get a recent ntp time
 
   blankscreen(true);
 //  EEPROM_read(0, conf);
 //  current_mode = conf.default_mode;
-
-  doNTPsync();
-
   blankscreen();
   FastLED.show();
+  Serial.println("Setup done.");
 }
 
 void loop() {
-  blankscreen();                    // all pixels to black
-  timeToStripe(hour(),minute());    // calculate time and fill leds array
-  FastLED.show();                   // show it on the matix
-  delay(500);                       // wait half a second
+  runner.execute();
+
+
+  //blankscreen();                    // all pixels to black
+  //timeToStripe(hour(),minute());    // calculate time and fill leds array
+  //FastLED.show();                   // show it on the matix
+  //delay(500);                       // wait half a second
 }
