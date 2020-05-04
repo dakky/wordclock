@@ -1,4 +1,8 @@
 #include <FastLED.h>
+#include <TimeLib.h>
+#include <ESP8266WiFi.h>
+#include <WiFiUdp.h>
+#include <NTPClient.h>
 
 #ifndef _CONFIG_H_
 #define _CONFIG_H_

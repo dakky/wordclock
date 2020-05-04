@@ -1,7 +1,6 @@
 #define FASTLED_ESP8266_RAW_PIN_ORDER
 #define _TASK_SLEEP_ON_IDLE_RUN
 
-#include <FastLED.h>
 #include <TimeLib.h>
 #include <TaskScheduler.h>
 // #include <EEPROM.h>
@@ -10,6 +9,7 @@
 #include "ntpFunctions.h"
 #include "wifiFunctions.h"
 #include "heartbeat.h"
+#include "telnetDebugging.h"
 
 /*
 int current_mode;
@@ -27,7 +27,6 @@ Scheduler runner;
 Task heartbeat(1000, TASK_FOREVER, &heartbeatCallback, &runner, true);
 Task ntpsync(6000, TASK_FOREVER, &heartbeatCallback, &runner, true); 
 
-
 void setup() {
 	// serial port
 	Serial.begin(115200);
@@ -36,6 +35,7 @@ void setup() {
 	Serial.println("ESP8266 WordClock setup() begin");
 
   setupWifi();
+  setupTelnetDebugging();
   setupLeds();
   setupHeartbeat();
   setupNtpClient();
