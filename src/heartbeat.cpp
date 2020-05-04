@@ -2,9 +2,9 @@
 
 void setupHeartbeat() {
     #if HEARTBEAT_ENABLED
-    Serial.println("Heartbeat: Initializing ...");
+    debugI("Heartbeat: Initializing ...");
     pinMode(HEARTBEAT_PIN, OUTPUT);
-    Serial.println("Heartbeat: Done ...");
+    debugI("Heartbeat: Done ...");
     #endif
 }
 
