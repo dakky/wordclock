@@ -5,6 +5,7 @@
 #ifndef _WIFIFUNCTIONS_H_
 #define _WIFIFUNCTIONS_H_
 
+#include "config.h"
 #include "ledFunctions.h"
 #include "words.h"
 
