@@ -1,5 +1,6 @@
 #include <ESP8266WiFi.h>
 #include <WiFiManager.h>
+#include <ESP8266mDNS.h>  
 #include <Arduino.h>
 
 #ifndef _WIFIFUNCTIONS_H_
