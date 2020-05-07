@@ -10,7 +10,7 @@ void setupHeartbeat() {
 
 void heartbeatCallback() {
     #if HEARTBEAT_ENABLED
-    debugD("Callback Heartbeat: Triggered ...");
+    debugD("The ghost in the machine is still alive.");
     digitalWrite(HEARTBEAT_PIN, !digitalRead(HEARTBEAT_PIN));
     #endif
 }
