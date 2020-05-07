@@ -5,15 +5,15 @@ NTPClient timeClient(ntpUDP, NTP_SERVER_NAME, 3600, NTP_UPDATE_INTERVAL_MINS * 6
 
 
 void setupNtpClient() {
-    Serial.println("Setup NTPClient: Initializing ...");
+    Serial.println("NTPClient: Initializing ...");
     timeClient.begin();
-    Serial.println("Setup NTPClient: Done ...");
+    Serial.println("NTPClient: Done ...");
 }
 
 void updateNtpClient() {
+    debugD("Getting time from NTP Server %s", NTP_SERVER_NAME);
     timeClient.update();
     // settings system Time
-    Serial.print("NTPClient Callback: Setting time to: ");
-    Serial.println(timeClient.getEpochTime());
+    debugD("NTPClient Callback: Setting time to: %s", timeClient.getEpochTime());
     setTime(timeClient.getEpochTime());
 } 
