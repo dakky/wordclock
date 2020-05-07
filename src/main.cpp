@@ -5,7 +5,7 @@
 #include <TimeLib.h>
 #include <TaskScheduler.h>
 // #include <EEPROM.h>
-#include "eeprom.h"
+//#include "eeprom.h"
 #include "timeFunctions.h"
 #include "ntpFunctions.h"
 #include "wifiFunctions.h"
@@ -25,12 +25,13 @@ struct config_t
 // Background Tasks and Scheduler
 Scheduler runner;
 Task heartbeat(1000, TASK_FOREVER, &heartbeatCallback, &runner, true);
-Task ntpsync(6000, TASK_FOREVER, &heartbeatCallback, &runner, true); 
+// Task ntpsync(10000, TASK_FOREVER, &updateNtpClient, &runner, true); 
 
 
 void setup() {
 	// serial port
-	Serial.begin(115200);
+	//Serial.begin(115200);
+	Serial.begin(9600);
 	Serial.println();
 	Serial.println();
 	Serial.println("ESP8266 WordClock setup() begin");
@@ -39,18 +40,18 @@ void setup() {
   setupLeds();
   setupHeartbeat();
   setupNtpClient();
-  updateNtpClient(); // explizit ntprun here in order to get a recent ntp time
 
-  blankscreen(true);
+  //blankscreen(true);
 //  EEPROM_read(0, conf);
 //  current_mode = conf.default_mode;
-  blankscreen();
-  FastLED.show();
+  //blankscreen();
+  //FastLED.show();
   Serial.println("Setup done.");
 }
 
 void loop() {
   runner.execute();
+  delay(50);
 
 
   //blankscreen();                    // all pixels to black

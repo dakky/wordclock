@@ -10,13 +10,14 @@
 //---------------------------------------------------------------------------------------
 void setupWifi() {
     // WiFi Setup 
-	Serial.println("Wifi: Initializing ...");
+	Serial.println("Setup Wifi: Initializing ...");
     wifi_station_set_hostname(WIFI_WORDCLOCK_HOSTNAME);
 	WiFiManager wifiManager;
 	wifiManager.setAPCallback(wifimanagerConfigModeCallback);
+	wifiManager.setConfigPortalTimeout(60);
 	if (!wifiManager.autoConnect("WordClock"))
 	{
-		Serial.println("Wifi: Failed to connect, timeout");
+		Serial.println("Setup Wifi: Failed to connect, timeout");
 		word2stripe(word_WIFIMANAGER,sizeof(word_WIFIMANAGER)/sizeof(int), CRGB::Red);
 		delay(3000);
 		ESP.reset();
