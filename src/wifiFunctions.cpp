@@ -48,6 +48,7 @@ void setupWifi() {
 void wifimanagerConfigModeCallback(WiFiManager *myWiFiManager)
 {
     // show "wifimanager word (words.h)"
+	blankscreen();
     word2stripe(word_WIFIMANAGER,sizeof(word_WIFIMANAGER)/sizeof(int), CRGB::Yellow);
     FastLED.show();
 	Serial.println("Entered WIFIManager config mode");
