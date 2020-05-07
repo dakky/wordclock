@@ -1,15 +1,9 @@
 #define FASTLED_ESP8266_RAW_PIN_ORDER
 #define _TASK_SLEEP_ON_IDLE_RUN
 
-#include <TimeLib.h>
+// no idea, why this cant be moved to globals.h :shrug:
 #include <TaskScheduler.h>
-// #include <EEPROM.h>
-//#include "eeprom.h"
-#include "timeFunctions.h"
-#include "ntpFunctions.h"
-#include "wifiFunctions.h"
-#include "heartbeat.h"
-#include "telnetDebugging.h"
+#include "config.h"
 
 /*
 int current_mode;
@@ -24,7 +18,7 @@ struct config_t
 
 // Background Tasks and Scheduler
 Scheduler runner;
-Task heartbeat(1000, TASK_FOREVER, &heartbeatCallback, &runner, true);
+Task heartbeat(5000, TASK_FOREVER, &heartbeatCallback, &runner, true);
 // Task ntpsync(10000, TASK_FOREVER, &updateNtpClient, &runner, true); 
 
 void setup() {
@@ -51,7 +45,10 @@ void setup() {
 
 void loop() {
   runner.execute();
-  delay(50);
+  Debug.handle();
+  
+  // keep esp WDT alive?
+  yield();
 
 
   //blankscreen();                    // all pixels to black

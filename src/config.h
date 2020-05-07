@@ -1,16 +1,7 @@
-#include <Arduino.h>
-#include <FastLED.h>
-#include <ESP8266WiFi.h>
-#include <WiFiUdp.h>
-#include <WiFiManager.h>
-#include <NTPClient.h>
-#include <TimeLib.h>
-
 #ifndef _CONFIG_H_
 #define _CONFIG_H_
 
-#include "words.h"
-#include "ledFunctions.h"
+#include "globals.h"
 
 #define NUM_LEDS 114
 #define DATA_PIN 3
