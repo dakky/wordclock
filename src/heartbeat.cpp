@@ -10,6 +10,7 @@ void setupHeartbeat() {
 
 void heartbeatCallback() {
     #if HEARTBEAT_ENABLED
+    Serial.println("Callback Heartbeat: Triggered ...");
     digitalWrite(HEARTBEAT_PIN, !digitalRead(HEARTBEAT_PIN));
     #endif
 }

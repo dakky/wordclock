@@ -14,5 +14,7 @@ void updateNtpClient() {
     debugD("Getting time from NTP Server %s", NTP_SERVER_NAME);
     timeClient.update();
     // settings system Time
+    Serial.print("NTPClient Callback: Setting time to: ");
+    Serial.println(timeClient.getEpochTime());
     setTime(timeClient.getEpochTime());
 } 
