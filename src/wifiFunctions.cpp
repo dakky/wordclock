@@ -23,6 +23,13 @@ void setupWifi() {
 		ESP.reset();
 	}
     Serial.println("Wifi: Connected successfully.");
+	// MDNS Setup
+	WiFi.hostname(WIFI_WORDCLOCK_HOSTNAME);
+	if (MDNS.begin(WIFI_WORDCLOCK_HOSTNAME)) {
+		Serial.print("MDNS: MDNS responder started. Hostname -> ");
+		Serial.println(WIFI_WORDCLOCK_HOSTNAME);
+	}
+
     word2stripe(word_WIFIMANAGER,sizeof(word_WIFIMANAGER)/sizeof(int), CRGB::Green);
     FastLED.show();
 	delay(3000); // this function is called in setup only => delay is okay imho
