@@ -12,8 +12,7 @@ void setupNtpClient() {
 
 void updateNtpClient() {
     debugD("Getting time from NTP Server %s", NTP_SERVER_NAME);
-    timeClient.update();
     // settings system Time
-    debugD("NTPClient Callback: Setting time to: %s", timeClient.getEpochTime());
-    setTime(timeClient.getEpochTime());
+    timeClient.update();
+    debugD("NTPClient Callback: Setting time to: %lu", timeClient.getEpochTime());
 } 
