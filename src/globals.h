@@ -15,7 +15,10 @@
 #include <ArduinoOTA.h>
 
 // project deps
-#include "words.h"
+// SETUP: chose frontplate layout here:
+//#include "words_layout1.h"
+#include "words_layout2.h"
+
 #include "ledFunctions.h"
 #include "timeFunctions.h"
 #include "ntpFunctions.h"
@@ -29,5 +32,6 @@
 extern RemoteDebug Debug;
 extern int OTA_in_progress;
 extern int updateCountdown;
+extern NTPClient timeClient;
 
 #endif

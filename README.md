@@ -1,7 +1,7 @@
 ![PlatformIO CI](https://github.com/dakky/wordclock/workflows/PlatformIO%20CI/badge.svg?branch=master)
 
 # Wordclock
-This is my first DIY Wordclock
+This is another implementation of a DIY Wordclock
 
 Instead of single pixels I used a digital LED-stripe (10 pieces of 11 LEDs and 1 piece of 4 LEDs) with WS2812B-LEDs
 controlled by a NodeMCU (mini) with an ESP8266 Wifi module for configuration and NTP.
@@ -12,6 +12,7 @@ controlled by a NodeMCU (mini) with an ESP8266 Wifi module for configuration and
 * non-blocking schedules
 * telnet remote debugging
 * OTA
+* easy to customzize to different front plates
 
 
 #### Stripe layout
@@ -81,6 +82,8 @@ Every row left to right.
 
 The matrix shows 10x11 letters to represent the time in german words. An array for each word, containing the coords of the letters, are in the words header file.
 
+### Layout 1
+
 |Y\X|1|2|3|4|5|6|7|8|9|10|11|
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 |**1**|E|S|K|I|S|T|A|F|Ü|N|F|
@@ -93,6 +96,22 @@ The matrix shows 10x11 letters to represent the time in german words. An array f
 |**8**|S|E|C|H|S|N|L|A|C|H|T|
 |**9**|S|I|E|B|E|N|Z|W|Ö|L|F|
 |**10**|Z|E|H|N|E|U|N|K|U|H|R|
+
+### Layout 2
+
+|Y\X|1|2|3|4|5|6|7|8|9|10|11
+|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+|**1**|E|S|K|I|S|T|L|F|Ü|N|F|
+|**2**|Z|E|H|N|Z|W|A|N|Z|I|G|
+|**3**|D|R|E|I|V|I|E|R|T|E|L|
+|**4**|T|G|N|A|C|H|V|O|R|J|M|
+|**5**|H|A|L|B|Q|Z|W|Ö|L|F|P|
+|**6**|Z|W|E|I|N|S|I|E|B|E|N|
+|**7**|K|D|R|E|I|R|H|F|Ü|N|F|
+|**8**|E|L|F|N|E|U|N|V|I|E|R|
+|**9**|W|A|C|H|T|Z|E|H|N|R|S|
+|**10**|B|S|E|C|H|S|F|M|U|H|R|
+
 
 Four more pixels shows additional minutes. In the original WordClock, they are in the corners but I prefered to place them under the last row.
 
@@ -141,6 +160,11 @@ Four more pixels shows additional minutes. In the original WordClock, they are i
 |***S***|***I***|***E***|***B***|***E***|***N***|Z|W|Ö|L|F|
 |Z|E|H|N|E|U|N|K|U|H|R|
 |||***X***||***X***||***X***||***X***|||
+
+#### Usage/Setup
+
+1. have a look @ "config.h"
+1. search for string "SETUP:" in order to find the locations, where to setup the wiring and frontplate layout
 
 #### BOM
 Article | Source | Price
