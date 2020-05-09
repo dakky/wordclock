@@ -17,9 +17,11 @@ struct config_t
 */
 
 // Background Tasks and Scheduler
+// ntp and updateTime are disabled, until OTA delay is finished ... just in case
 Scheduler runner;
 Task heartbeat(5000, TASK_FOREVER, &heartbeatCallback, &runner, true);
-Task ntpsync(NTP_UPDATE_INTERVAL_MINS * 60 * 1000, TASK_FOREVER, &updateNtpClient, &runner, true); 
+Task ntpsync(NTP_UPDATE_INTERVAL_MINS * 60 * 1000, TASK_FOREVER, &updateNtpClient, &runner, true);
+Task updateTime(1000, TASK_FOREVER, &timeToStripe , &runner, true );
 
 void setup() {
 	// serial port
@@ -51,7 +53,7 @@ void loop() {
   if (OTA_in_progress)
 		return;
 
-  otaStartDelay();
+  // otaStartDelay();
   Debug.handle();
   runner.execute();
   
@@ -59,8 +61,8 @@ void loop() {
   yield();
 
 
-  //blankscreen();                    // all pixels to black
-  //timeToStripe(hour(),minute());    // calculate time and fill leds array
+  blankscreen();                    // all pixels to black
+  // timeToStripe();    // calculate time and fill leds array
   //FastLED.show();                   // show it on the matix
   //delay(500);                       // wait half a second
 }

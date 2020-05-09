@@ -2,8 +2,12 @@
 
 
 // push the time (words) to leds array
-void timeToStripe(uint8_t hours,uint8_t minutes)
+void timeToStripe()
 {
+  uint8_t hours = timeClient.getHours();
+  uint8_t minutes = timeClient.getMinutes();
+  
+  debugD("Setting LEDs to: %u:%u",hours,minutes);
   // show "ES IST"
   word2stripe(word_ES,sizeof(word_ES)/sizeof(int));
   word2stripe(word_IST,sizeof(word_IST)/sizeof(int));
@@ -119,4 +123,5 @@ void timeToStripe(uint8_t hours,uint8_t minutes)
   
   // show "UHR" if full hour
   if(minutes < 5) { word2stripe(word_UHR,sizeof(word_UHR)/sizeof(int)); }
+  FastLED.show();
 }

@@ -3,6 +3,6 @@
 
 #include "config.h"
 
-void timeToStripe(uint8_t hours,uint8_t minutes);
+void timeToStripe();
 
 #endif
