@@ -119,9 +119,9 @@ const int word_OTASUCCESS[] {
 const int word_OTAERROR[] { 
     X3Y2, X4Y2, X8Y2, X9Y2,
     X4Y3, X5Y3, X7Y3, X8Y3,
-    X4Y4, X5Y4, X6Y4, X7Y4, 
+    X5Y4, X6Y4, X7Y4, 
     X5Y5, X6Y5,
-    X4Y6, X5Y6, X6Y6, X7Y6,
+    X5Y6, X6Y6, X7Y6,
     X4Y7, X5Y7, X7Y7, X8Y7,
     X3Y8, X4Y8, X8Y8, X9Y8,
     MIN1, MIN2, MIN3, MIN4};

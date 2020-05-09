@@ -1,18 +1,24 @@
 #include "ntpFunctions.h"
 
-WiFiUDP ntpUDP;
-NTPClient timeClient(ntpUDP, NTP_SERVER_NAME, 3600, NTP_UPDATE_INTERVAL_MINS * 60 * 1000);
+Timezone clockTimezoned;
 
+void setupNtpClock() {
+    Serial.println("Setup NTPClock: Initializing ...");
+    
+    setInterval(60 * NTP_UPDATE_INTERVAL_MINS);
+    setServer(NTP_SERVER_NAME);
 
-void setupNtpClient() {
-    Serial.println("NTPClient: Initializing ...");
-    timeClient.begin();
-    Serial.println("NTPClient: Done ...");
+    waitForSync();
+
+	Serial.println("UTC: " + UTC.dateTime());
+	
+    //TODO: Location will only be set once ... will fix this when the webui is in place
+	if (!clockTimezoned.setCache(0)) 
+    {
+        clockTimezoned.setLocation(NTP_TIMEZONE);
+    }
+    
+	Serial.println("Local time (" + clockTimezoned.getTimezoneName() +"): " + clockTimezoned.dateTime());
+    
+    Serial.println("Setup NTPClock: Done ...");
 }
-
-void updateNtpClient() {
-    debugD("Getting time from NTP Server %s", NTP_SERVER_NAME);
-    // settings system Time
-    timeClient.update();
-    debugD("NTPClient Callback: Setting time to: %lu", timeClient.getEpochTime());
-} 
