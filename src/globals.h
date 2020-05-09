@@ -9,8 +9,9 @@
 #include <WiFiManager.h>
 #include <WiFiUdp.h>
 #include <DNSServer.h>
-#include <NTPClient.h>
-#include <TimeLib.h>
+// #include <NTPClient.h>
+// #include <TimeLib.h>
+#include <ezTime.h>
 #include <RemoteDebug.h>
 #include <ArduinoOTA.h>
 
@@ -26,12 +27,12 @@
 #include "heartbeat.h"
 #include "telnetDebugging.h"
 #include "otaFunctions.h"
-// #include <EEPROM.h>
+#include <EEPROM.h>
 // #include "eeprom.h"
 
 extern RemoteDebug Debug;
 extern int OTA_in_progress;
 extern int updateCountdown;
-extern NTPClient timeClient;
+extern Timezone clockTimezoned;
 
 #endif
