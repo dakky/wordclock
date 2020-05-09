@@ -20,8 +20,6 @@ struct config_t
 // ntp and updateTime are disabled, until OTA delay is finished ... just in case
 Scheduler runner;
 Task heartbeat(5000, TASK_FOREVER, &heartbeatCallback, &runner, true);
-Task ntpsync(NTP_UPDATE_INTERVAL_MINS * 60 * 1000, TASK_FOREVER, &updateNtpClient, &runner, true);
-Task updateTime(1000, TASK_FOREVER, &timeToStripe , &runner, true );
 
 void setup() {
 	// serial port
@@ -35,7 +33,7 @@ void setup() {
   setupLeds();
   setupOTA();
   setupHeartbeat();
-  setupNtpClient();
+  setupNtpClock();
 
   //blankscreen(true);
 //  EEPROM_read(0, conf);
@@ -46,23 +44,14 @@ void setup() {
 }
 
 void loop() {
-
-  ArduinoOTA.handle();
-
-  // if ota is in progress, skip the rest
-  if (OTA_in_progress)
+  ArduinoOTA.handle();        // Doing OTA stuff
+  if (OTA_in_progress)        // if ota is in progress, skip the rest
 		return;
-
   // otaStartDelay();
-  Debug.handle();
-  runner.execute();
-  
-  // keep esp WDT alive?
-  yield();
 
-
-  blankscreen();                    // all pixels to black
-  // timeToStripe();    // calculate time and fill leds array
-  //FastLED.show();                   // show it on the matix
-  //delay(500);                       // wait half a second
+  Debug.handle();             // handle telnet connection
+  events();                   // from ezTime.h: gets ntp time if nessesary
+  runner.execute();           // run additionals tasks (heartbeat)
+  timeToStripe();             // update LEDs
+  yield();                    // keep esp WDT alive?
 }
