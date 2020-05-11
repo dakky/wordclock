@@ -1,5 +1,6 @@
 {
     "files.associations": {
         "functional": "cpp"
-    }
+    },
+    "editor.detectIndentation": false
 }
