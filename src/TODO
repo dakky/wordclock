@@ -1,0 +1,8 @@
+* 23:58 = anzeige => "Es ist fünf vor" 
+    => Bug
+* save to eeprom
+    => feature
+* webserver mit SSL
+    => feature#
+* testbilder (alles special words anzeigen)
+    => feature

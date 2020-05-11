@@ -12,5 +12,6 @@ void blankscreen(CRGB color = CRGB::Black, bool commit = false);
 void blankscreen(CRGB color, bool commit);
 
 void setupLeds();
+void setBrightness();
 
 #endif

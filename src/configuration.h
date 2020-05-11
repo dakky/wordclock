@@ -1,7 +1,7 @@
 // ESP8266 Wordclock
 // Copyright (C) 2020 Robert, https://github.com/dakky
 //
-//  See heartbeat.cpp for description.
+//  See configuration.cpp for description.
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -15,20 +15,39 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#ifndef _HEARTBEAT_H_
-#define _HEARTBEAT_H_
+#ifndef _CONFIGURATION_H_
+#define _CONFIGURATION_H_
 
-#define HEARTBEAT_PIN 2
+// Oject keeping the configuration
+typedef struct _config_struct
+{
+  int ledBrightness;
+  int ledSimpleColor;
+  bool heartbeatEnabled;
+} config_struct;;
 
-class HeartbeatClass 
+class ConfigClass
 {
     public:
-        HeartbeatClass();
-        virtual ~HeartbeatClass();
+        ConfigClass();
+        virtual ~ConfigClass();
         void begin();
-        void doHeartbeat();
+        void save();
+        void load();
+        void reset();
+        void print();
+
+        // public config vars
+        int ledBrightness;
+        int ledSimpleColor;
+        bool heartbeatEnabled;
+
+    private:
+        // copy of config.json content
+        config_struct *config;
+        const char *filename = "/config.json";
 };
 
-extern HeartbeatClass Heartbeat;
+extern ConfigClass Config;
 
 #endif
