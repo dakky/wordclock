@@ -37,7 +37,6 @@ void loop()
     // otaStartDelay();
 
     Debug.handle(); // handle telnet connection
-    // webServer.handleClient();
     events();         // from ezTime.h: gets ntp time if nessesary
     runner.execute(); // run additionals tasks (heartbeat)
     timeToStripe();   // update LEDs

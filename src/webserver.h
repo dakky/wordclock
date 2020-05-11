@@ -4,9 +4,7 @@
 #include "config.h"
 
 void setupWebserver();
-void webserverHandleWebRequests();
-void webserverHandleRoot();
-bool webserverLoadFromSpiffs(String path);
-
+String webserverProcessHtmlTemplate(const String& var);
+void webserverNotFound(AsyncWebServerRequest *request);
 
 #endif
