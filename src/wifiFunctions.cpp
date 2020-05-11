@@ -18,7 +18,7 @@ void setupWifi()
     wifi_station_set_hostname(WIFI_WORDCLOCK_HOSTNAME);
     AsyncWiFiManager wifiManager(&webServer, &dns);
     // reset settings - for testing
-    wifiManager.resetSettings();
+    // wifiManager.resetSettings();
     wifiManager.setAPCallback(wifimanagerConfigModeCallback);
     wifiManager.setTimeout(60);
     if (!wifiManager.autoConnect("WordClock"))

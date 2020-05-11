@@ -1,16 +1,14 @@
 #include "webserver.h"
 
-
 //---------------------------------------------------------------------------------------
 // setupWebserver
 //
 //  Setup of webserver
 //
-// ->
-// <- --
 //---------------------------------------------------------------------------------------
 void setupWebserver()
 {
+    webServer.reset();
     //Initialize File System
     Serial.println("Setup Webserver: Initializing ...");
     if (!SPIFFS.begin())
@@ -18,12 +16,14 @@ void setupWebserver()
         Serial.println("SPIFFS Initialisierung ... Error!");
     }
     Serial.println("File System Initialized");
-    // routen registrieren
+
+    // register routes
+    // index.html
     webServer.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
         request->send(SPIFFS, "/index.html", String(), false, webserverProcessHtmlTemplate);
     });
     
-    // Route to load style.css file
+    // milligram.min.css.gz
     webServer.on("/milligram.min.css.gz", HTTP_GET, [](AsyncWebServerRequest *request){
         request->send(SPIFFS, "/milligram.min.css.gz", "text/css");
     });
