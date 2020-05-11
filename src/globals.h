@@ -6,15 +6,14 @@
 #include <FastLED.h>
 #include <ESP8266WiFi.h>
 #include <ESP8266mDNS.h>
-#include <WiFiManager.h>
+#include <ESPAsyncWebServer.h>
+#include <ESPAsyncWiFiManager.h>
 #include <WiFiUdp.h>
 #include <DNSServer.h>
 #include <ezTime.h>
 #include <RemoteDebug.h>
 #include <ArduinoOTA.h>
-// #include <EEPROM.h>
-// #include <ESP8266WebServer.h>
-// #include <FS.h>
+
 
 // project deps
 // SETUP: chose frontplate layout here:
@@ -28,12 +27,12 @@
 #include "heartbeat.h"
 #include "telnetDebugging.h"
 #include "otaFunctions.h"
-#include "webserver.h"
+// #include "webserver.h"
 
 
 extern RemoteDebug Debug;
 extern int updateCountdown;
 extern Timezone clockTimezoned;
-extern ESP8266WebServer webServer;
+extern AsyncWebServer webServer;
 
 #endif

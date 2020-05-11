@@ -5,17 +5,6 @@
 #include <TaskScheduler.h>
 #include "config.h"
 
-/*
-int current_mode;
-struct config_t
-{
-    char wlan_essid[32];
-    char wlan_key[64];
-    char update_ip[15];
-    int default_mode;
-} conf;
-*/
-
 // Background Tasks and Scheduler
 // ntp and updateTime are disabled, until OTA delay is finished ... just in case
 Scheduler runner;
@@ -35,7 +24,7 @@ void setup()
     setupOTA();
     setupHeartbeat();
     setupNtpClock();
-    setupWebserver();
+    // setupWebserver();
     doForceTimeToStripe();
     Serial.println("Setup done.");
 }
@@ -48,7 +37,7 @@ void loop()
     // otaStartDelay();
 
     Debug.handle(); // handle telnet connection
-    webServer.handleClient();
+    // webServer.handleClient();
     events();         // from ezTime.h: gets ntp time if nessesary
     runner.execute(); // run additionals tasks (heartbeat)
     timeToStripe();   // update LEDs
