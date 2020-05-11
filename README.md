@@ -165,6 +165,8 @@ Four more pixels shows additional minutes. In the original WordClock, they are i
 
 1. have a look @ "config.h"
 1. search for string "SETUP:" in order to find the locations, where to setup the wiring and frontplate layout
+1. upload Code (first time via usb, later via OTA)
+1. upload spiffs data `pio run -t uploadfs`
 
 #### BOM
 Article | Source | Price

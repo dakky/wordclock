@@ -9,11 +9,12 @@
 #include <WiFiManager.h>
 #include <WiFiUdp.h>
 #include <DNSServer.h>
-// #include <NTPClient.h>
-// #include <TimeLib.h>
 #include <ezTime.h>
 #include <RemoteDebug.h>
 #include <ArduinoOTA.h>
+// #include <EEPROM.h>
+// #include <ESP8266WebServer.h>
+// #include <FS.h>
 
 // project deps
 // SETUP: chose frontplate layout here:
@@ -27,12 +28,12 @@
 #include "heartbeat.h"
 #include "telnetDebugging.h"
 #include "otaFunctions.h"
-#include <EEPROM.h>
-// #include "eeprom.h"
+#include "webserver.h"
+
 
 extern RemoteDebug Debug;
-extern int OTA_in_progress;
 extern int updateCountdown;
 extern Timezone clockTimezoned;
+extern ESP8266WebServer webServer;
 
 #endif

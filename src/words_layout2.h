@@ -90,13 +90,13 @@ const int word_WIFIMANAGER[] {
     X5Y10, X6Y10,
     MIN1, MIN2, MIN3, MIN4};
 
-// OTA in succeeded => "Check mark" Icon
+// OTA in progress => "Arrow down" Icon
 const int word_OTAPROGRESS[] { 
     X5Y1, X6Y1, X7Y1,
     X5Y2, X6Y2, X7Y2,
     X5Y3, X6Y3, X7Y3,
     X5Y4, X6Y4, X7Y4,
-    X2Y5, X3Y5, X4Y5, X5Y5, X7Y5, X7Y5, X9Y5, X10Y5,
+    X2Y5, X3Y5, X4Y5, X5Y5, X7Y5, X8Y5, X9Y5, X10Y5,
     X2Y6, X10Y6,
     X3Y7, X9Y7,
     X4Y8, X8Y8,
