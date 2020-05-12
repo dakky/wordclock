@@ -27,7 +27,7 @@
 #include "heartbeat.h"
 #include "telnetDebugging.h"
 #include "otaFunctions.h"
-// #include "webserver.h"
+#include "webserver.h"
 
 
 extern RemoteDebug Debug;

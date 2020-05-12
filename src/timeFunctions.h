@@ -4,7 +4,5 @@
 #include "config.h"
 
 void timeToStripe();
-void doForceTimeToStripe();
-bool isForceTimeToStripe();
 
 #endif

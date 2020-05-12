@@ -24,8 +24,7 @@ void setup()
     setupOTA();
     setupHeartbeat();
     setupNtpClock();
-    // setupWebserver();
-    doForceTimeToStripe();
+    setupWebserver();
     Serial.println("Setup done.");
 }
 
