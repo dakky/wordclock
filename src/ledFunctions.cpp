@@ -38,5 +38,16 @@ int getBrightness() {
 
 void setBrightness(int brightness) {
     globalBrightness = brightness;
+    FastLED.setBrightness(globalBrightness);
+    debugI("Global brightness is set to %i", globalBrightness);
+}
+
+int getSimpleColor() {
+    return globalBrightness;
+}
+
+void setSimpleColor(int brightness) {
+    globalBrightness = brightness;
+    FastLED.setBrightness(globalBrightness);
     debugI("Global brightness is set to %i", globalBrightness);
 }

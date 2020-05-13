@@ -3,13 +3,14 @@
 // push the time (words) to leds array
 void timeToStripe()
 {
-
     blankscreen();
     uint8_t hours = clockTimezoned.hour();
     uint8_t minutes = clockTimezoned.minute();
-
-    debugI("Setting LEDs to: %u:%u", hours, minutes);
     
+    if (minuteChanged()) {
+        debugI("Setting LEDs to: %u:%u", hours, minutes);
+    }
+
     // show "ES IST"
     word2stripe(word_ES, sizeof(word_ES) / sizeof(int));
     word2stripe(word_IST, sizeof(word_IST) / sizeof(int));

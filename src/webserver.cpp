@@ -18,22 +18,25 @@ void setupWebserver()
 
     // register routes
     // index.html
-    webServer.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
+    webServer.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
+        debugD("webserver: / GET request hit me.");
         request->send(SPIFFS, "/index.html", String(), false, webserverProcessHtmlTemplate);
     });
-    
+
     // milligram.min.css.gz
-    webServer.on("/milligram.min.css.gz", HTTP_GET, [](AsyncWebServerRequest *request){
-        request->send(SPIFFS, "/milligram.min.css.gz", "text/css");
+    webServer.on("/milligram.min.css.gz", HTTP_GET, [](AsyncWebServerRequest *request) {
+        AsyncWebServerResponse *response = request->beginResponse(SPIFFS, "/milligram.min.css.gz", "text/css");
+        response->addHeader("Content-Encoding", "gzip");
+        request->send(response);
     });
 
     // configurations data of th wordclock/LEDs
-    webServer.on("/config/wordclock", HTTP_POST, [](AsyncWebServerRequest *request){
-        debugD("/config/worclock POST request hit me.");
-        // Paramter parsen
-        String message;
+    webServer.on("/config", HTTP_POST, [](AsyncWebServerRequest *request) {
+        debugD("webserver: /config POST request hit me.");
+        // parse parameter
+        String message = "Changed configuration:\n";
         int params = request->params();
-        debugD("%d params sent in\n", params);
+        debugD("webserver: %d params sent in", params);
         for (int i = 0; i < params; i++)
         {
             AsyncWebParameter *p = request->getParam(i);
@@ -43,6 +46,7 @@ void setupWebserver()
             }
             else if (p->isPost())
             {
+                // handling of post params
                 debugD("_POST[%s]: %s", p->name().c_str(), p->value().c_str());
             }
             else
@@ -50,18 +54,21 @@ void setupWebserver()
                 debugD("_GET[%s]: %s", p->name().c_str(), p->value().c_str());
             }
         }
-        if (request->hasParam("device", true))
+
+        if (request->hasParam("brightness", true))
         {
-            message = request->getParam("device")->value();
+            debugI("Got POST parameter 'brightness'. Handling it now.");
+            // setBrightness(request->getParam("brightness")->value().toInt());
+            // message += "brightness: " + request->getParam("brightness")->value();
         }
-        else
+        if (request->hasParam("color", true))
         {
-            debugE("No known parameter submitted to endpoint.");
-            message = "not specified";
+            debugI("Got POST parameter 'color'. Handling it now.");
+            //setBrightness(request->getParam("brightness")->value().toInt());
+            setBrightness(50);
+            //message += request->getParam("brightness")->value();
         }
-        request->send(200, "text/plain", "Off, GET: " + message);
-        Serial.print("Device ");
-        Serial.println(message);
+        request->send(200, "text/plain", message);
     });
 
     webServer.onNotFound(webserverNotFound);
@@ -75,31 +82,40 @@ void setupWebserver()
 // handles / requests of webserver
 // simple redirect to index.html
 //---------------------------------------------------------------------------------------
-String webserverProcessHtmlTemplate(const String& var){
-  Serial.println(var);
-  if(var == "brightness"){
-    
-    return String(getBrightness());
-  }
-  return String();
+String webserverProcessHtmlTemplate(const String &var)
+{
+    Serial.println(var);
+    if (var == "CLOCK_BRIGHTNESS")
+    {
+
+        return String(getBrightness());
+    }
+    if (var == "CLOCK_COLOR")
+    {
+
+        return String(getBrightness());
+    }
+    return String();
 }
 
 //---------------------------------------------------------------------------------------
 // webserverNotFound
 //
-// handles not found URIs (404) 
+// handles not found URIs (404)
 //
 //---------------------------------------------------------------------------------------
-void webserverNotFound(AsyncWebServerRequest *request) {
+void webserverNotFound(AsyncWebServerRequest *request)
+{
     request->send(404, "text/plain", "Not found");
 }
 
 //---------------------------------------------------------------------------------------
 // webserverWordclockConfig
 //
-// handles post for 
+// handles post for
 //
 //---------------------------------------------------------------------------------------
-void webserverWordclockConfig(AsyncWebServerRequest *request) {
+void webserverWordclockConfig(AsyncWebServerRequest *request)
+{
     request->send(404, "text/plain", "Not found");
 }

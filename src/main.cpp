@@ -40,4 +40,5 @@ void loop()
     runner.execute(); // run additionals tasks (heartbeat)
     timeToStripe();   // update LEDs
     yield();          // keep esp WDT alive?
+    FastLED.delay(50);
 }
