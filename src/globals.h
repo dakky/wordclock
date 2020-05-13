@@ -28,6 +28,7 @@
 #include "telnetDebugging.h"
 #include "otaFunctions.h"
 #include "webserver.h"
+#include "configuration.h"
 
 
 extern RemoteDebug Debug;

@@ -176,3 +176,9 @@ WS2812B LED Stripes (30 LEDs/m, RGB) | [BangGood.com](http://www.banggood.com/5M
 Mini NodeMCU | [BangGood.com](http://www.banggood.com/Mini-NodeMCU-ESP8266-WIFI-Development-Board-Based-On-ESP-12F-p-1054209.html) | 4,85 €
 3A Micro-USB Supply | [BangGood.com](http://www.banggood.com/USUKEU-DC-5V-4A-AC-Adapter-Charger-Power-Supply-For-LED-Strip-Light-p-953473.html) | 4,49 €
 Some wires|bargain bin|
+
+
+
+#### Some internals
+
+1. SPIFFS is used as filesystem library. It's marked as deprecated with LittleFS as its successor. But as long as platformIO can only build and upload SPIFFS images, I prefer these

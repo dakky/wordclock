@@ -8,7 +8,7 @@
 // Background Tasks and Scheduler
 // ntp and updateTime are disabled, until OTA delay is finished ... just in case
 Scheduler runner;
-Task heartbeat(5000, TASK_FOREVER, &heartbeatCallback, &runner, true);
+Task heartbeat(5000, TASK_FOREVER, &Heartbeat.doHeartbeat, &runner, true);
 
 void setup()
 {
@@ -19,10 +19,11 @@ void setup()
     Serial.println("ESP8266 WordClock setup() begin");
 
     setupWifi();
+	Config.begin();
     setupTelnetDebugging();
     setupLeds();
     setupOTA();
-    setupHeartbeat();
+    Heartbeat.begin();
     setupNtpClock();
     setupWebserver();
     Serial.println("Setup done.");
