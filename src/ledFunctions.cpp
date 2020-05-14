@@ -1,9 +1,10 @@
 #include "ledFunctions.h"
 
 CRGB leds[NUM_LEDS];
+int globalBrightness = 125;
 
 // push word to leds array
-void word2stripe(const int word[], int len, CRGB color)
+void word2stripe(const int word[], int len, CRGB color, int brightness)
 {
     for (int letter = 0; letter < len; letter++)
     {
@@ -31,7 +32,22 @@ void setupLeds()
     Serial.println("Setup LEDs: Done ...");
 }
 
-void setBrightness() {
-    FastLED.setBrightness(Config.ledBrightness);
-    debugI("Global brightness is set to %i", Config.ledBrightness);
+int getBrightness() {
+    return globalBrightness;
+}
+
+void setBrightness(int brightness) {
+    globalBrightness = brightness;
+    FastLED.setBrightness(globalBrightness);
+    debugI("Global brightness is set to %i", globalBrightness);
+}
+
+int getSimpleColor() {
+    return globalBrightness;
+}
+
+void setSimpleColor(int brightness) {
+    globalBrightness = brightness;
+    FastLED.setBrightness(globalBrightness);
+    debugI("Global brightness is set to %i", globalBrightness);
 }

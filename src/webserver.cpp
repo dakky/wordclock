@@ -65,9 +65,7 @@ void setupWebserver()
         {
             debugI("Got POST parameter 'color'. Handling it now.");
             //setBrightness(request->getParam("brightness")->value().toInt());
-            Config.ledBrightness = 50;
-            Config.save();
-            setBrightness();
+            setBrightness(50);
             //message += request->getParam("brightness")->value();
         }
         request->send(200, "text/plain", message);
@@ -90,12 +88,12 @@ String webserverProcessHtmlTemplate(const String &var)
     if (var == "CLOCK_BRIGHTNESS")
     {
 
-        return String(Config.ledBrightness);
+        return String(getBrightness());
     }
     if (var == "CLOCK_COLOR")
     {
 
-        return String(Config.ledSimpleColor);
+        return String(getBrightness());
     }
     return String();
 }
