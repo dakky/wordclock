@@ -97,11 +97,10 @@ void ConfigClass::load()
     this->config->ledSimpleColor = doc["ledSimpleColor"];
     this->config->heartbeatEnabled = doc["heartbeatEnabled"];
     this->config->dataPin = doc["dataPin"];
-
-    // example of string to deseralize
-    // strlcpy(config.hostname,                  // <- destination
-    //  doc["hostname"] | "example.com",  // <- source
-    //  sizeof(config.hostname));         // <- destination's capacity
+    strlcpy(this->config->ntpServername, doc["ntpServername"], sizeof(this->config->ntpServername));
+    strlcpy(this->config->ntpTimezone, doc["ntpTimezone"], sizeof(this->config->ntpTimezone));
+    this->config->ntpUpdateIntervalMinutes = doc["ntpUpdateIntervalMinutes"];
+    strlcpy(this->config->hostname, doc["hostname"], sizeof(this->config->hostname));
 
     file.close();
 }
@@ -114,10 +113,14 @@ void ConfigClass::load()
 //---------------------------------------------------------------------------------------
 void ConfigClass::reset()
 {
-	this->config->ledBrightness = 152;          // middle of 0..254
-    this->config->ledSimpleColor = 0x7FFF00;    // light green
+	this->config->ledBrightness = 152;                      // middle of 0..254
+    this->config->ledSimpleColor = 0x7FFF00;                // light green
     this->config->heartbeatEnabled = true;
-    this->config->dataPin = 15;                 // D8 on Wemos Mini
+    this->config->dataPin = 15;                             // D8 on Wemos Mini
+    strlcpy(this->config->ntpServername,"europe.pool.ntp.org", sizeof(this->config->ntpServername));
+    strlcpy(this->config->ntpTimezone, "Europe/Berlin", sizeof(this->config->ntpTimezone));
+    this->config->ntpUpdateIntervalMinutes = 60;
+    strlcpy(this->config->hostname, "wordclock", sizeof(this->config->hostname));
 }
 
 //---------------------------------------------------------------------------------------
@@ -146,6 +149,10 @@ void ConfigClass::save()
     doc["ledSimpleColor"] = this->config->ledSimpleColor;
     doc["heartbeatEnabled"] = this->config->heartbeatEnabled;
     doc["dataPin"] = this->config->dataPin;
+    doc["ntpServername"] = this->config->ntpServername;
+    doc["ntpTimezone"] = this->config->ntpTimezone;
+    doc["ntpUpdateIntervalMinutes"] = this->config->ntpUpdateIntervalMinutes;
+    doc["hostname"] = this->config->hostname;
     
 
     // Serialize JSON to file

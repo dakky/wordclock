@@ -21,10 +21,14 @@
 // Oject keeping the configuration
 typedef struct _config_struct
 {
-    int ledBrightness;
-    int ledSimpleColor;
+    int  ledBrightness;
+    int  ledSimpleColor;
     bool heartbeatEnabled;
-    int dataPin;
+    int  dataPin;
+    char ntpServername[];
+    char ntpTimezone[];
+    int  ntpUpdateIntervalMinutes;
+    char hostname[];
 } config_struct;
 
 class ConfigClass
@@ -43,6 +47,10 @@ public:
     int ledSimpleColor;
     bool heartbeatEnabled;
     int dataPin;
+    char ntpServername[];
+    char ntpTimezone[];
+    int ntpUpdateIntervalMinutes;
+    char hostname[];
 
 private:
     // copy of config.json content

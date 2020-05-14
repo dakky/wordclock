@@ -22,24 +22,24 @@ void setup()
 	Config.begin();
     setupTelnetDebugging();
     LED.begin();
-    setupOTA();
+    OTA.begin();
     Heartbeat.begin();
-    setupNtpClock();
+    NTP.begin();
     setupWebserver();
     Serial.println("Setup done.");
 }
 
 void loop()
 {
-    ArduinoOTA.handle();   // Doing OTA stuff
-    if (isOtaInProgress()) // if ota is in progress, skip the rest
+    OTA.handle();
+    if (OTA.isRunning()) // if ota is in progress, skip the rest
         return;
     // otaStartDelay();
 
     Debug.handle(); // handle telnet connection
     events();         // from ezTime.h: gets ntp time if nessesary
     runner.execute(); // run additionals tasks (heartbeat)
-    timeToStripe();   // update LEDs
+    timeToStripe(NTP.getHours(), NTP.getMinutes());   // update LEDs
     yield();          // keep esp WDT alive?
     FastLED.delay(50);
 }

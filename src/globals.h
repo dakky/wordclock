@@ -10,9 +10,7 @@
 #include <ESPAsyncWiFiManager.h>
 #include <WiFiUdp.h>
 #include <DNSServer.h>
-#include <ezTime.h>
 #include <RemoteDebug.h>
-#include <ArduinoOTA.h>
 
 
 // project deps
@@ -33,7 +31,6 @@
 
 extern RemoteDebug Debug;
 extern int updateCountdown;
-extern Timezone clockTimezoned;
 extern AsyncWebServer webServer;
 
 #endif

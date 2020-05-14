@@ -6,9 +6,6 @@
 #define NUM_LEDS 114
 #define DATA_PIN 15 // D8 on wemos
 
-#define HEARTBEAT_ENABLED true
-#define HEARTBEAT_PIN 2
-
 #define WIFI_WORDCLOCK_HOSTNAME "wordclock"
 
 #define NTP_SERVER_NAME "europe.pool.ntp.org"

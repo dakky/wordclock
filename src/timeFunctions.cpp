@@ -1,11 +1,13 @@
+#include <Arduino.h>
 #include "timeFunctions.h"
+#include "ledFunction.h"
+#include "words_layout2.h"
+#include "telnetDebugging.h"
 
 // push the time (words) to leds array
-void timeToStripe()
+void timeToStripe(uint8_t hours, uint8_t minutes)
 {
     LED.blankscreen(false);
-    uint8_t hours = clockTimezoned.hour();
-    uint8_t minutes = clockTimezoned.minute();
     
     if (minuteChanged()) {
         debugI("Setting LEDs to: %u:%u", hours, minutes);

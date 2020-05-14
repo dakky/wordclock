@@ -1,28 +1,69 @@
-#include "otaFunctions.h"
+// Copyright (C) 2020 Robert, https://github.com/dakky
+//
+//  This is the OTA module. It handles all OTA centric tasks
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-bool OTA_in_progress = false;
-int updateCountdown = OTA_STARTUP_DELAY;
+#include <Arduino.h>
+#include <ArduinoOTA.h>
+#include "otaFunctions.h"
+#include "configuration.h"
+#include "ledFunction.h"
+#include "words_layout2.h"
 
 //---------------------------------------------------------------------------------------
-// setupOTA
+// global instance
+//---------------------------------------------------------------------------------------
+OtaFunctionsClass OTA = OtaFunctionsClass();
+
+//---------------------------------------------------------------------------------------
+// OtaFunctionsClass
 //
-//  Setup of OTA with WifiManager
+// Constructor, loads default values
 //
-// ->
+//---------------------------------------------------------------------------------------
+OtaFunctionsClass::OtaFunctionsClass()
+{
+}
+
+//---------------------------------------------------------------------------------------
+// ~OtaFunctionsClass
+//
+// destructor
+//
+//---------------------------------------------------------------------------------------
+OtaFunctionsClass::~OtaFunctionsClass()
+{
+}
+
+//---------------------------------------------------------------------------------------
+// begin
+//
+// Setup of OTA with WifiManager
+//
 // Telnetserver won't be executed when OTA is set up/running => no telnet debuggung here
 // but plain old Serial
-// <- --
 //---------------------------------------------------------------------------------------
-void setupOTA()
+void OtaFunctionsClass::begin()
 {
     // OTA update
     Serial.println("Setup OTA: Initializing ...");
     ArduinoOTA.setPort(8266);
-    ArduinoOTA.setHostname(WIFI_WORDCLOCK_HOSTNAME);
+    ArduinoOTA.setHostname(Config.hostname);
     //ArduinoOTA.setPassword((const char *)"123");
-    ArduinoOTA.onStart([]() {
-        // Config.updateProgress = 0;
-        OTA_in_progress = true;
+    ArduinoOTA.onStart([this]() {
+        this->OTAinProgress = true;
         Serial.println("OTA Start");
     });
 
@@ -58,31 +99,18 @@ void setupOTA()
     Serial.println("Setup OTA: Done ...");
 }
 
-void otaStartDelay()
+void OtaFunctionsClass::handle()
 {
-    // show the hourglass animation with green corners for the first 2.5 seconds
-    // after boot to be able to reflash with OTA during that time window if
-    // the firmware hangs afterwards
-    if (updateCountdown)
-    {
-        debugI("Delaying startup of wordclock for %i ms", OTA_STARTUP_DELAY);
-        LED.blankscreen(false);
-        LED.word2stripe(word_HOURGLASS, CRGB::Green, true);
-        Serial.print(".");
-        delay(100);
-        updateCountdown--;
-        debugD("Delay left: %i", OTA_STARTUP_DELAY);
-        if (updateCountdown == 0)
-        {
-            // wenn das startdelay fuer OTA vorbei ist, einfach weiter im text
-            debugI("Startup delay has passed. Resuming normal operations");
-            LED.blankscreen();
-        }
-        return;
-    }
+    ArduinoOTA.handle(); // Doing OTA stuff
 }
 
-bool isOtaInProgress()
+//---------------------------------------------------------------------------------------
+// isRunning
+//
+// Reports if OTA is in progress
+//
+//---------------------------------------------------------------------------------------
+bool OtaFunctionsClass::isRunning()
 {
-    return OTA_in_progress;
+    return this->OTAinProgress;
 }
