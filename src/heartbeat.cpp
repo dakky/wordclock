@@ -27,7 +27,7 @@
 HeartbeatClass Heartbeat = HeartbeatClass();
 
 //---------------------------------------------------------------------------------------
-// ConfigClass
+// HeartbeatClass
 //
 // Constructor
 //
@@ -37,7 +37,7 @@ HeartbeatClass::HeartbeatClass()
 }
 
 //---------------------------------------------------------------------------------------
-// ~ConfigClass
+// ~HeartbeatClass
 //
 // destructor
 //

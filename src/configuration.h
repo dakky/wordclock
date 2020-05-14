@@ -21,31 +21,33 @@
 // Oject keeping the configuration
 typedef struct _config_struct
 {
-  int ledBrightness;
-  int ledSimpleColor;
-  bool heartbeatEnabled;
-} config_struct;;
+    int ledBrightness;
+    int ledSimpleColor;
+    bool heartbeatEnabled;
+    int dataPin;
+} config_struct;
 
 class ConfigClass
 {
-    public:
-        ConfigClass();
-        virtual ~ConfigClass();
-        void begin();
-        void save();
-        void load();
-        void reset();
-        void print();
+public:
+    ConfigClass();
+    virtual ~ConfigClass();
+    void begin();
+    void save();
+    void load();
+    void reset();
+    void print();
 
-        // public config vars
-        int ledBrightness;
-        int ledSimpleColor;
-        bool heartbeatEnabled;
+    // public config vars
+    int ledBrightness;
+    int ledSimpleColor;
+    bool heartbeatEnabled;
+    int dataPin;
 
-    private:
-        // copy of config.json content
-        config_struct *config;
-        const char *filename = "/config.json";
+private:
+    // copy of config.json content
+    config_struct *config;
+    const char *filename = "/config.json";
 };
 
 extern ConfigClass Config;

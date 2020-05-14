@@ -67,7 +67,6 @@ void setupWebserver()
             //setBrightness(request->getParam("brightness")->value().toInt());
             Config.ledBrightness = 50;
             Config.save();
-            setBrightness();
             //message += request->getParam("brightness")->value();
         }
         request->send(200, "text/plain", message);

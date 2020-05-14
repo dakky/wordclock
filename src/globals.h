@@ -20,7 +20,7 @@
 //#include "words_layout1.h"
 #include "words_layout2.h"
 
-#include "ledFunctions.h"
+#include "ledFunction.h"
 #include "timeFunctions.h"
 #include "ntpFunctions.h"
 #include "wifiFunctions.h"

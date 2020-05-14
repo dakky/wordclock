@@ -8,7 +8,7 @@
 // Background Tasks and Scheduler
 // ntp and updateTime are disabled, until OTA delay is finished ... just in case
 Scheduler runner;
-Task heartbeat(5000, TASK_FOREVER, &Heartbeat.doHeartbeat, &runner, true);
+//Task heartbeat(5000, TASK_FOREVER, &Heartbeat.doHeartbeat, &runner, true);
 
 void setup()
 {
@@ -21,7 +21,7 @@ void setup()
     setupWifi();
 	Config.begin();
     setupTelnetDebugging();
-    setupLeds();
+    LED.begin();
     setupOTA();
     Heartbeat.begin();
     setupNtpClock();

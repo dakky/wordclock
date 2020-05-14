@@ -96,6 +96,7 @@ void ConfigClass::load()
     this->config->ledBrightness = doc["ledBrightness"];
     this->config->ledSimpleColor = doc["ledSimpleColor"];
     this->config->heartbeatEnabled = doc["heartbeatEnabled"];
+    this->config->dataPin = doc["dataPin"];
 
     // example of string to deseralize
     // strlcpy(config.hostname,                  // <- destination
@@ -116,6 +117,7 @@ void ConfigClass::reset()
 	this->config->ledBrightness = 152;          // middle of 0..254
     this->config->ledSimpleColor = 0x7FFF00;    // light green
     this->config->heartbeatEnabled = true;
+    this->config->dataPin = 15;                 // D8 on Wemos Mini
 }
 
 //---------------------------------------------------------------------------------------
@@ -143,6 +145,7 @@ void ConfigClass::save()
     doc["ledBrightness"] = this->config->ledBrightness;
     doc["ledSimpleColor"] = this->config->ledSimpleColor;
     doc["heartbeatEnabled"] = this->config->heartbeatEnabled;
+    doc["dataPin"] = this->config->dataPin;
     
 
     // Serialize JSON to file

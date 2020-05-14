@@ -24,7 +24,7 @@ void setupWifi()
     if (!wifiManager.autoConnect("WordClock"))
     {
         Serial.println("Setup Wifi: Failed to connect, timeout");
-        word2stripe(word_WIFIMANAGER, sizeof(word_WIFIMANAGER) / sizeof(int), CRGB::Red);
+        LED.word2stripe(word_WIFIMANAGER, CRGB::Red, true);
         delay(3000);
         ESP.reset();
     }
@@ -37,10 +37,8 @@ void setupWifi()
         Serial.println(WIFI_WORDCLOCK_HOSTNAME);
     }
 
-    word2stripe(word_WIFIMANAGER, sizeof(word_WIFIMANAGER) / sizeof(int), CRGB::Green);
-    FastLED.show();
+    LED.word2stripe(word_WIFIMANAGER, CRGB::Green, true);
     delay(3000); // this function is called in setup only => delay is okay imho
-    blankscreen(true);
 }
 
 //---------------------------------------------------------------------------------------
@@ -52,9 +50,8 @@ void setupWifi()
 void wifimanagerConfigModeCallback(AsyncWiFiManager *myWiFiManager)
 {
     // show "wifimanager word (words.h)"
-    blankscreen();
-    word2stripe(word_WIFIMANAGER, sizeof(word_WIFIMANAGER) / sizeof(int), CRGB::Yellow);
-    FastLED.show();
+    LED.blankscreen(false);
+    LED.word2stripe(word_WIFIMANAGER, CRGB::Yellow, true);
     Serial.println("Entered WIFIManager config mode");
     Serial.println(WiFi.softAPIP());
     Serial.println(myWiFiManager->getConfigPortalSSID());
