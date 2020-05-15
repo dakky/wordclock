@@ -59,10 +59,15 @@ void ConfigClass::begin()
 {
     if (!SPIFFS.begin())
     {
-        Serial.println("initilializing SPIFFS ... Error!");
+        Serial.println("Configuration: Initilializing SPIFFS ... Error!");
     }
-    Serial.println("File System Initialized");
+    Serial.println("Configuration: File System Initialized");
+    // for debugging purposes: create file every startup with default values
+    //this->reset();
+    //this->save();
+
 	this->load();
+    this->print();
 }
 
 //---------------------------------------------------------------------------------------
@@ -74,7 +79,7 @@ void ConfigClass::begin()
 //---------------------------------------------------------------------------------------
 void ConfigClass::load()
 {
-	Serial.println("Reading config.json");
+	Serial.println("Configuration: Reading config.json");
 
     File file = SPIFFS.open(filename, "r");
 
@@ -87,7 +92,7 @@ void ConfigClass::load()
     DeserializationError error = deserializeJson(doc, file);
     if (error)
     {
-        Serial.println("Failed to read file, using default configuration");
+        Serial.println("Configuration: Failed to read file, using default configuration");
         this->reset();
         this->save();
     }
@@ -103,6 +108,16 @@ void ConfigClass::load()
     strlcpy(this->config->hostname, doc["hostname"], sizeof(this->config->hostname));
 
     file.close();
+
+    // now load the config struct members into the public class members
+    this->ledBrightness = this->config->ledBrightness;
+    this->ledSimpleColor = this->config->ledSimpleColor;
+    this->heartbeatEnabled = this->config->heartbeatEnabled;
+    this->dataPin = this->config->dataPin;
+    memcpy(this->config->ntpServername, this->ntpServername, ;
+    this->ntpTimezone[] = this->config->ntpTimezone;
+    this->ntpUpdateIntervalMinutes = this->config->ntpUpdateIntervalMinutes[];
+    this->hostname[] = this->config->hostname[];
 }
 
 //---------------------------------------------------------------------------------------
@@ -113,7 +128,8 @@ void ConfigClass::load()
 //---------------------------------------------------------------------------------------
 void ConfigClass::reset()
 {
-	this->config->ledBrightness = 152;                      // middle of 0..254
+    Serial.println("Configuration: Resetting to default values.");
+	this->config->ledBrightness = 153;                      // middle of 0..254
     this->config->ledSimpleColor = 0x7FFF00;                // light green
     this->config->heartbeatEnabled = true;
     this->config->dataPin = 15;                             // D8 on Wemos Mini
@@ -121,6 +137,7 @@ void ConfigClass::reset()
     strlcpy(this->config->ntpTimezone, "Europe/Berlin", sizeof(this->config->ntpTimezone));
     this->config->ntpUpdateIntervalMinutes = 60;
     strlcpy(this->config->hostname, "wordclock", sizeof(this->config->hostname));
+    Serial.println("Configuration: Reset Done");
 }
 
 //---------------------------------------------------------------------------------------

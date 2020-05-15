@@ -25,10 +25,10 @@ typedef struct _config_struct
     int  ledSimpleColor;
     bool heartbeatEnabled;
     int  dataPin;
-    char ntpServername[];
-    char ntpTimezone[];
+    char ntpServername[25];
+    char ntpTimezone[25];
     int  ntpUpdateIntervalMinutes;
-    char hostname[];
+    char hostname[25];
 } config_struct;
 
 class ConfigClass
@@ -47,14 +47,14 @@ public:
     int ledSimpleColor;
     bool heartbeatEnabled;
     int dataPin;
-    char ntpServername[];
-    char ntpTimezone[];
+    char ntpServername[25];
+    char ntpTimezone[25];
     int ntpUpdateIntervalMinutes;
-    char hostname[];
+    char hostname[25];
 
 private:
     // copy of config.json content
-    config_struct *config;
+    config_struct *config = new config_struct();
     const char *filename = "/config.json";
 };
 

@@ -57,9 +57,15 @@ void NtpFunctionsClass::begin()
 {
     Serial.println("Setup NTPClock: Initializing ...");
     
+    setDebug(INFO);
     setInterval(60 * Config.ntpUpdateIntervalMinutes);
     setServer(Config.ntpServername);
+    
 
+    Config.reset();
+    Serial.println("Configvalues:");
+    Serial.println(Config.ntpServername);
+    
     waitForSync();
 
     Serial.println("UTC: " + UTC.dateTime());
