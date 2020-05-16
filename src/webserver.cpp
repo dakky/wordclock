@@ -1,4 +1,5 @@
 #include "webserver.h"
+#include "configuration.h"
 
 //---------------------------------------------------------------------------------------
 // setupWebserver
@@ -30,7 +31,13 @@ void setupWebserver()
         request->send(response);
     });
 
-    // configurations data of th wordclock/LEDs
+    // config.json
+    webServer.on("/config.json", HTTP_GET, [](AsyncWebServerRequest *request) {
+        debugD("webserver: /config GET request hit me.");
+        request->send(SPIFFS, "/config.json", "text/plain");
+    });
+
+    // configurations data of th wordclock/LEDs (POST)
     webServer.on("/config", HTTP_POST, [](AsyncWebServerRequest *request) {
         debugD("webserver: /config POST request hit me.");
         // parse parameter
@@ -58,18 +65,20 @@ void setupWebserver()
         if (request->hasParam("brightness", true))
         {
             debugI("Got POST parameter 'brightness'. Handling it now.");
-            // setBrightness(request->getParam("brightness")->value().toInt());
-            // message += "brightness: " + request->getParam("brightness")->value();
+            Config.setLedBrightness(request->getParam("brightness", true)->value().toInt());
         }
         if (request->hasParam("color", true))
         {
             debugI("Got POST parameter 'color'. Handling it now.");
             //setBrightness(request->getParam("brightness")->value().toInt());
-            setBrightness(50);
             //message += request->getParam("brightness")->value();
         }
-        request->send(200, "text/plain", message);
+        // request->send(200, "text/plain", message);
+        request->redirect("/");
+        Config.save();
     });
+
+
 
     webServer.onNotFound(webserverNotFound);
     webServer.begin();
@@ -87,13 +96,14 @@ String webserverProcessHtmlTemplate(const String &var)
     Serial.println(var);
     if (var == "CLOCK_BRIGHTNESS")
     {
-
-        return String(getBrightness());
+        return String(Config.getLedBrightness());
     }
     if (var == "CLOCK_COLOR")
     {
-
-        return String(getBrightness());
+        // as the chararray comes in the form 0xFFFFFF we need to replace 0x with #
+        String color = Config.getLedSimpleColor();
+        color.replace("0x","#");
+        return color;
     }
     return String();
 }
@@ -105,17 +115,6 @@ String webserverProcessHtmlTemplate(const String &var)
 //
 //---------------------------------------------------------------------------------------
 void webserverNotFound(AsyncWebServerRequest *request)
-{
-    request->send(404, "text/plain", "Not found");
-}
-
-//---------------------------------------------------------------------------------------
-// webserverWordclockConfig
-//
-// handles post for
-//
-//---------------------------------------------------------------------------------------
-void webserverWordclockConfig(AsyncWebServerRequest *request)
 {
     request->send(404, "text/plain", "Not found");
 }
