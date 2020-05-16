@@ -1,16 +1,65 @@
-#ifndef _HEARTBEAT_H_
-#define _HEARTBEAT_H_
-
-#include "config.h"
-#include <ArduinoJson.h>
+// ESP8266 Wordclock
+// Copyright (C) 2020 Robert, https://github.com/dakky
+//
+//  See configuration.cpp for description.
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#ifndef _CONFIGURATION_H_
+#define _CONFIGURATION_H_
 
 // Oject keeping the configuration
-struct Config {
-  int ledBrightness;
-  int ledSimpleColor;
+typedef struct _config_struct
+{
+    int  ledBrightness;
+    char  ledSimpleColor[9];
+    bool heartbeatEnabled;
+    int  dataPin;
+    char ntpServername[25];
+    char ntpTimezone[25];
+    int  ntpUpdateIntervalMinutes;
+    char hostname[25];
+} config_struct;
+
+class ConfigClass
+{
+public:
+    ConfigClass();
+    virtual ~ConfigClass();
+    void begin();
+    void save();
+    void load();
+    void reset();
+    void print();
+    int getLedBrightness();
+    void setLedBrightness(int);
+    char* getLedSimpleColor();
+    void setLedSimpleColor(char*,int);
+
+    // public config vars
+    bool heartbeatEnabled;
+    int dataPin;
+    char ntpServername[25];
+    char ntpTimezone[25];
+    int ntpUpdateIntervalMinutes;
+    char hostname[25];
+
+private:
+    // copy of config.json content
+    config_struct *config = new config_struct();
+    const char *filename = "/config.json";
 };
 
-void loadConfiguration(const char *filename, Config &config);
-void resetConfiguration(const char *filename);
+extern ConfigClass Config;
 
 #endif

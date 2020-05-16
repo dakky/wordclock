@@ -4,6 +4,7 @@
 // no idea, why this cant be moved to globals.h :shrug:
 #include <TaskScheduler.h>
 #include "config.h"
+#include "configuration.h"
 
 // Background Tasks and Scheduler
 // ntp and updateTime are disabled, until OTA delay is finished ... just in case
@@ -19,6 +20,7 @@ void setup()
     Serial.println("ESP8266 WordClock setup() begin");
 
     setupWifi();
+    Config.begin();
     setupTelnetDebugging();
     setupLeds();
     setupOTA();
