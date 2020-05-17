@@ -21,6 +21,7 @@
 #include <ArduinoJson.h>
 #include <FS.h>
 #include "configuration.h"
+#include "telnetDebugging.h"
 
 //---------------------------------------------------------------------------------------
 // global instance
@@ -63,8 +64,8 @@ void ConfigClass::begin()
     }
     Serial.println("Configuration: File System Initialized");
     // for debugging purposes: create file every startup with default values
-    this->reset();
-    this->save();
+    // this->reset();
+    // this->save();
 
     this->load();
     this->print();
@@ -269,4 +270,5 @@ void ConfigClass::setLedSimpleColor(char* color, int buf)
 {
     // copy chararray into config struct
     memcpy(this->config->ledSimpleColor, color, buf);
+    debugD("color is set to: %s", color);
 }

@@ -2,14 +2,24 @@
 #include "configuration.h"
 
 CRGB leds[NUM_LEDS];
-int globalBrightness = 125;
 
 // push word to leds array
 void word2stripe(const int word[], int len, CRGB color)
 {
-
+    
     FastLED.setBrightness(Config.getLedBrightness());
+    for (int letter = 0; letter < len; letter++)
+    {
+        leds[word[letter]] = color;
+    }
+}
 
+//push word to leds array, color as hex char array
+void word2stripe(const int word[], int len)
+{
+    
+    FastLED.setBrightness(Config.getLedBrightness());
+    long color = strtol(Config.getLedSimpleColor(),NULL,0);
     for (int letter = 0; letter < len; letter++)
     {
         leds[word[letter]] = color;

@@ -64,13 +64,17 @@ void setupWebserver()
 
         if (request->hasParam("brightness", true))
         {
-            debugI("Got POST parameter 'brightness'. Handling it now.");
             Config.setLedBrightness(request->getParam("brightness", true)->value().toInt());
         }
         if (request->hasParam("color", true))
         {
-            debugI("Got POST parameter 'color'. Handling it now.");
-            //setBrightness(request->getParam("brightness")->value().toInt());
+            String color = request->getParam("color", true)->value().c_str();
+            color.replace("#","0x"); // make a "valid" HEX string
+
+            int str_len = color.length() + 1;
+            char buf[str_len];
+            color.toCharArray(buf,str_len);
+            Config.setLedSimpleColor(buf, str_len);
             //message += request->getParam("brightness")->value();
         }
         // request->send(200, "text/plain", message);
