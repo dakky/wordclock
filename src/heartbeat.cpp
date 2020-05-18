@@ -3,7 +3,7 @@
 
 void setupHeartbeat()
 {
-    if (Config.heartbeatEnabled)
+    if (Config.getHeartbeat())
     {
         Serial.println("Heartbeat: Initializing ...");
         pinMode(HEARTBEAT_PIN, OUTPUT);
@@ -13,7 +13,7 @@ void setupHeartbeat()
 
 void heartbeatCallback()
 {
-    if (Config.heartbeatEnabled)
+    if (Config.getHeartbeat())
     {
         debugD("The ghost in the machine is still alive.");
         digitalWrite(HEARTBEAT_PIN, !digitalRead(HEARTBEAT_PIN));

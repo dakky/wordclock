@@ -7,7 +7,6 @@ void setupNtpClock()
 {
     Serial.println("Setup NTPClock: Initializing ...");
 
-    setInterval(60 * Config.ntpUpdateIntervalMinutes);
     debugI("Settings NTP server to: %s", Config.getNtpServername());
     setServer(Config.getNtpServername());
 
@@ -19,7 +18,7 @@ void setupNtpClock()
         blankscreen();
         word2stripe(word_OTAERROR, sizeof(word_OTAERROR) / sizeof(int), CRGB::Red);
         FastLED.show();
-        if (attemptCnt = 3) 
+        if (attemptCnt == 3) 
         {
             updateNTP();
             break;
