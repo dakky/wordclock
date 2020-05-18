@@ -1,5 +1,6 @@
 #include "webserver.h"
 #include "configuration.h"
+#include "ntpFunctions.h"
 
 //---------------------------------------------------------------------------------------
 // setupWebserver
@@ -75,11 +76,30 @@ void setupWebserver()
             char buf[str_len];
             color.toCharArray(buf,str_len);
             Config.setLedSimpleColor(buf, str_len);
-            //message += request->getParam("brightness")->value();
+        }
+        if (request->hasParam("ntpServername", true))
+        {
+            String timezone = request->getParam("ntpServername", true)->value().c_str();
+            int str_len = timezone.length() + 1;
+            char buf[str_len];
+            timezone.toCharArray(buf,str_len);
+            Config.setNtpServername(buf, str_len);
+        }
+        if (request->hasParam("ntpTimezone", true))
+        {
+            String timezone = request->getParam("ntpTimezone", true)->value().c_str();
+            int str_len = timezone.length() + 1;
+            char buf[str_len];
+            timezone.toCharArray(buf,str_len);
+            Config.setNtpTimezone(buf, str_len);
+        }
+        if (request->hasParam("resetConfig", true))
+        {
+            Config.reset();
         }
         // request->send(200, "text/plain", message);
         request->redirect("/");
-        Config.save();
+        Config.save();  
     });
 
 
@@ -108,6 +128,28 @@ String webserverProcessHtmlTemplate(const String &var)
         String color = Config.getLedSimpleColor();
         color.replace("0x","#");
         return color;
+    }
+    if (var == "NTP_SERVERNAME")
+    {
+        return Config.getNtpServername();
+    }
+    if (var == "NTP_TIMEZONE")
+    {
+        return Config.getNtpTimezone();
+    }
+    if (var == "NTP_TIME")
+    {
+        return clockTimezoned.dateTime();
+    }
+    if (var == "NTP_TIMESTATUS")
+    {
+        // FIXME: geht nocht nicht :/
+        return String(timeStatus());
+    }
+    // for any message i need to debug without serial connected
+    if (var == "ANY_DEBUGMESSAGE")
+    {
+        return String(lastNtpUpdateTime());
     }
     return String();
 }

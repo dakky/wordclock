@@ -32,10 +32,13 @@
             </div>
             <div class="column">
                 <h3>NTP options</h3>
+                <p>NTP clock is set to: %NTP_TIME%</p>
                 <form action="/config" method="POST" name="ntpForm">
                     <fieldset>
-                        <label for="zimezone">Name</label>
-                        <input type="text" placeholder="Europe/Berlin" id="timezone" name="timezone">
+                        <label for="ntpTimezone">Timezone</label>
+                        <input type="text" placeholder="%NTP_STIMEZONE%" id="ntpTimezone" name="ntpTimezone" value="%NTP_TIMEZONE%">
+                        <label for="ntpServername">NTP Server</label>
+                        <input type="text" placeholder="%NTP_SERVERNAME%" id="ntpServername" name="ntpServername" value="%NTP_SERVERNAME%">
                         <input class="button-primary" type="submit" value="Send">
                     </fieldset>
                 </form>
@@ -45,7 +48,14 @@
             <div class="column">.column</div>
             <div class="column">
                 <h3>Debug menu</h3>
-                <a href="/config.json">config.json on flash memory (persistent)</a>
+                <p><a href="/config.json">config.json on flash memory (persistent)</a></p>
+                <p>NTP Status: %NTP_TIMESTATUS%</p>
+                <p>
+                    <form action="/config" method="POST" name="debugReset">
+                        <input class="button-primary" type="submit" name="resetConfig" value="Reset config to defaults">
+                    </form>
+                </p>
+                <p>%ANY_DEBUGMESSAGE%</p>
             </div>
         </div>
     </div>

@@ -45,12 +45,14 @@ public:
     void setLedBrightness(int);
     char* getLedSimpleColor();
     void setLedSimpleColor(char*,int);
+    char* getNtpServername();
+    void setNtpServername(char*,int);
+    char* getNtpTimezone();
+    void setNtpTimezone(char*,int);
 
     // public config vars
     bool heartbeatEnabled;
     int dataPin;
-    char ntpServername[25];
-    char ntpTimezone[25];
     int ntpUpdateIntervalMinutes;
     char hostname[25];
 
