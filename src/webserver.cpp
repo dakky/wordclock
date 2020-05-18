@@ -77,6 +77,18 @@ void setupWebserver()
             color.toCharArray(buf,str_len);
             Config.setLedSimpleColor(buf, str_len);
         }
+        if (request->hasParam("heartbeatEnabled", true))
+        {
+            Config.setHeartbeat(request->getParam("heartbeatEnabled", true)->value());
+        }
+        if (request->hasParam("hostname", true))
+        {
+            String hostname = request->getParam("hostname", true)->value().c_str();
+            int str_len = hostname.length() + 1;
+            char buf[str_len];
+            hostname.toCharArray(buf,str_len);
+            Config.setHostname(buf, str_len);
+        }
         if (request->hasParam("ntpServername", true))
         {
             String timezone = request->getParam("ntpServername", true)->value().c_str();
@@ -143,13 +155,23 @@ String webserverProcessHtmlTemplate(const String &var)
     }
     if (var == "NTP_TIMESTATUS")
     {
-        // FIXME: geht nocht nicht :/
+        return String(timeStatus());
+    }
+    if (var == "CLOCK_HEARTBEATENABLED")
+    {
+        if (Config.getHeartbeat())
+        {
+            return String("checked");
+        }
+    }
+    if (var == "HOSTNAME")
+    {
         return String(timeStatus());
     }
     // for any message i need to debug without serial connected
     if (var == "ANY_DEBUGMESSAGE")
     {
-        return String(lastNtpUpdateTime());
+        return String(Config.getHeartbeat());
     }
     return String();
 }

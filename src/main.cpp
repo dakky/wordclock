@@ -19,8 +19,8 @@ void setup()
     Serial.println();
     Serial.println("ESP8266 WordClock setup() begin");
 
-    setupWifi();
     Config.begin();
+    setupWifi();
     setupTelnetDebugging();
     setupLeds();
     setupOTA();

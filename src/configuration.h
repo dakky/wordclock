@@ -27,7 +27,6 @@ typedef struct _config_struct
     int  dataPin;
     char ntpServername[25];
     char ntpTimezone[25];
-    int  ntpUpdateIntervalMinutes;
     char hostname[25];
 } config_struct;
 
@@ -49,12 +48,13 @@ public:
     void setNtpServername(char*,int);
     char* getNtpTimezone();
     void setNtpTimezone(char*,int);
+    bool getHeartbeat();
+    void setHeartbeat(bool);
+    char* getHostname();
+    void setHostname(char*,int);
 
     // public config vars
-    bool heartbeatEnabled;
     int dataPin;
-    int ntpUpdateIntervalMinutes;
-    char hostname[25];
 
 private:
     // copy of config.json content

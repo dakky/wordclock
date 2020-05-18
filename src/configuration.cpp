@@ -104,16 +104,12 @@ void ConfigClass::load()
     this->config->dataPin = doc["dataPin"];
     strlcpy(this->config->ntpServername, doc["ntpServername"], sizeof(this->config->ntpServername));
     strlcpy(this->config->ntpTimezone, doc["ntpTimezone"], sizeof(this->config->ntpTimezone));
-    this->config->ntpUpdateIntervalMinutes = doc["ntpUpdateIntervalMinutes"];
     strlcpy(this->config->hostname, doc["hostname"], sizeof(this->config->hostname));
 
     file.close();
 
     // now load the config struct members into the public class members
-    this->heartbeatEnabled = this->config->heartbeatEnabled;
     this->dataPin = this->config->dataPin;
-    this->ntpUpdateIntervalMinutes = this->config->ntpUpdateIntervalMinutes;
-    memcpy(this->hostname, this->config->hostname, sizeof(this->config->hostname));
 }
 
 //---------------------------------------------------------------------------------------
@@ -131,7 +127,6 @@ void ConfigClass::reset()
     this->config->dataPin = 15; // D8 on Wemos Mini
     strlcpy(this->config->ntpServername, "europe.pool.ntp.org", sizeof(this->config->ntpServername));
     strlcpy(this->config->ntpTimezone, "Europe/Berlin", sizeof(this->config->ntpTimezone));
-    this->config->ntpUpdateIntervalMinutes = 60;
     strlcpy(this->config->hostname, "wordclock", sizeof(this->config->hostname));
 
     this->save();
@@ -157,10 +152,7 @@ void ConfigClass::save()
 
     // writing public class members to config struct
     // now load the config struct members into the public class members
-    this->config->heartbeatEnabled = this->heartbeatEnabled;
     this->config->dataPin = this->dataPin;
-    this->config->ntpUpdateIntervalMinutes = this->ntpUpdateIntervalMinutes;
-    memcpy(this->config->hostname, this->hostname, sizeof(this->hostname));
 
     // Allocate a temporary JsonDocument
     // Don't forget to change the capacity to match your requirements.
@@ -174,7 +166,6 @@ void ConfigClass::save()
     doc["dataPin"] = this->config->dataPin;
     doc["ntpServername"] = this->config->ntpServername;
     doc["ntpTimezone"] = this->config->ntpTimezone;
-    doc["ntpUpdateIntervalMinutes"] = this->config->ntpUpdateIntervalMinutes;
     doc["hostname"] = this->config->hostname;
 
     // Serialize JSON to file
@@ -318,4 +309,55 @@ void ConfigClass::setNtpTimezone(char* timezone, int bufsize)
     // copy chararray into config struct
     memcpy(this->config->ntpTimezone, timezone, bufsize);
     Serial.printf("NTP Timezone is set to: %s", this->config->ntpTimezone);
+}
+
+//---------------------------------------------------------------------------------------
+// geatHeartbeat
+//
+// gets the heartbeatsetting from config struct
+//
+//---------------------------------------------------------------------------------------
+bool ConfigClass::getHeartbeat()
+{
+    return this->config->heartbeatEnabled;
+}
+
+//---------------------------------------------------------------------------------------
+// setHeartbeat
+//
+// sets the heartbeat in config struct
+// param1 (bool): heartbeat enabled: true/false
+//
+//---------------------------------------------------------------------------------------
+void ConfigClass::setHeartbeat(bool enabled)
+{
+    // copy chararray into config struct
+    this->config->heartbeatEnabled = enabled;
+    Serial.printf("Heartbeat enabled: %d", this->config->heartbeatEnabled);
+}
+
+//---------------------------------------------------------------------------------------
+// getHostname
+//
+// gets the hostname from config struct
+//
+//---------------------------------------------------------------------------------------
+char* ConfigClass::getHostname()
+{
+    return this->config->hostname;
+}
+
+//---------------------------------------------------------------------------------------
+// setHostname
+//
+// sets thehostname in config struct
+// param1 (char): chararray containing the hostname
+// param2 (int): size of chararray (usally `sizeof(arr)`)
+//
+//---------------------------------------------------------------------------------------
+void ConfigClass::setHostname(char* hostname, int bufsize)
+{
+    // copy chararray into config struct
+    memcpy(this->config->hostname, hostname, bufsize);
+    Serial.printf("Hostname is set to: %s", this->config->hostname);
 }

@@ -17,12 +17,21 @@
             <div class="column">
                 <h3>Wordclock options</h3>
                 <form action="/config" method="POST" name="clockForm">
+                    <!-- LED color -->
                     <label for="color">Color</label>
-                    <input type="color" id="color" onchange="clickColor(0, -1, -1, 5)" value="%CLOCK_COLOR%" name="color">
+                    <input type="color" id="color" onchange="clickColor(0, -1, -1, 5)" value="%CLOCK_COLOR%"
+                        name="color">
+                    <!-- LED brightness -->
                     <label for="brightness">Brightness (current value: %CLOCK_BRIGHTNESS%)</label>
                     <input type="range" id="brightness" name="brightness" min="0" max="254" step=5
                         value="%CLOCK_BRIGHTNESS%" />
-                    <br />
+                    <!-- Heartbeat enabled -->
+                    <label for="heartbeatEnabled">Heartbeat enabled?</label>
+                    <input type="checkbox" name="heartbeatEnabled" %CLOCK_HEARTBEATENABLED%>
+                    <!-- hostname -->
+                    <label for="hostname">Hostname</label>
+                    <input type="text" placeholder="%HOSTNAME%" id="hostname" name="hostname" value="%HOSTNAME%">
+                    <!-- Submit -->
                     <input class="button-primary" type="submit" value="Send">
                 </form>
                 * mode
@@ -36,9 +45,11 @@
                 <form action="/config" method="POST" name="ntpForm">
                     <fieldset>
                         <label for="ntpTimezone">Timezone</label>
-                        <input type="text" placeholder="%NTP_STIMEZONE%" id="ntpTimezone" name="ntpTimezone" value="%NTP_TIMEZONE%">
+                        <input type="text" placeholder="%NTP_STIMEZONE%" id="ntpTimezone" name="ntpTimezone"
+                            value="%NTP_TIMEZONE%">
                         <label for="ntpServername">NTP Server</label>
-                        <input type="text" placeholder="%NTP_SERVERNAME%" id="ntpServername" name="ntpServername" value="%NTP_SERVERNAME%">
+                        <input type="text" placeholder="%NTP_SERVERNAME%" id="ntpServername" name="ntpServername"
+                            value="%NTP_SERVERNAME%">
                         <input class="button-primary" type="submit" value="Send">
                     </fieldset>
                 </form>
@@ -51,9 +62,9 @@
                 <p><a href="/config.json">config.json on flash memory (persistent)</a></p>
                 <p>NTP Status: %NTP_TIMESTATUS%</p>
                 <p>
-                    <form action="/config" method="POST" name="debugReset">
-                        <input class="button-primary" type="submit" name="resetConfig" value="Reset config to defaults">
-                    </form>
+                <form action="/config" method="POST" name="debugReset">
+                    <input class="button-primary" type="submit" name="resetConfig" value="Reset config to defaults">
+                </form>
                 </p>
                 <p>%ANY_DEBUGMESSAGE%</p>
             </div>
