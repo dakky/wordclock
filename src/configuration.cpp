@@ -112,8 +112,6 @@ void ConfigClass::load()
     // now load the config struct members into the public class members
     this->heartbeatEnabled = this->config->heartbeatEnabled;
     this->dataPin = this->config->dataPin;
-    memcpy(this->ntpServername, this->config->ntpServername, sizeof(this->config->ntpServername));
-    memcpy(this->ntpTimezone, this->config->ntpTimezone, sizeof(this->config->ntpTimezone));
     this->ntpUpdateIntervalMinutes = this->config->ntpUpdateIntervalMinutes;
     memcpy(this->hostname, this->config->hostname, sizeof(this->config->hostname));
 }
@@ -161,8 +159,6 @@ void ConfigClass::save()
     // now load the config struct members into the public class members
     this->config->heartbeatEnabled = this->heartbeatEnabled;
     this->config->dataPin = this->dataPin;
-    memcpy(this->config->ntpServername, this->ntpServername, sizeof(this->ntpServername));
-    memcpy(this->config->ntpTimezone, this->ntpTimezone, sizeof(this->ntpTimezone));
     this->config->ntpUpdateIntervalMinutes = this->ntpUpdateIntervalMinutes;
     memcpy(this->config->hostname, this->hostname, sizeof(this->hostname));
 
@@ -266,9 +262,60 @@ char* ConfigClass::getLedSimpleColor()
 // param2 (int): size of chararray (usally `sizeof(arr)`)
 //
 //---------------------------------------------------------------------------------------
-void ConfigClass::setLedSimpleColor(char* color, int buf)
+void ConfigClass::setLedSimpleColor(char* color, int bufsize)
 {
     // copy chararray into config struct
-    memcpy(this->config->ledSimpleColor, color, buf);
+    memcpy(this->config->ledSimpleColor, color, bufsize);
     debugD("color is set to: %s", color);
+}
+//---------------------------------------------------------------------------------------
+// getNtpServername
+//
+// gets the NtpServername from config struct
+//
+//---------------------------------------------------------------------------------------
+char* ConfigClass::getNtpServername()
+{
+    return this->config->ntpServername;
+}
+
+//---------------------------------------------------------------------------------------
+// setLedBrightness
+//
+// sets the ntp server in config struct
+// param1 (char): chararray containing the ntp server
+// param2 (int): size of chararray (usally `sizeof(arr)`)
+//
+//---------------------------------------------------------------------------------------
+void ConfigClass::setNtpServername(char* servername, int bufsize)
+{
+    // copy chararray into config struct
+    memcpy(this->config->ntpServername, servername, bufsize);
+    Serial.printf("NTP Server is set to: %s", this->config->ntpServername);
+}
+
+//---------------------------------------------------------------------------------------
+// getNtpTimezone
+//
+// gets the NtpTimezone from config struct
+//
+//---------------------------------------------------------------------------------------
+char* ConfigClass::getNtpTimezone()
+{
+    return this->config->ntpTimezone;
+}
+
+//---------------------------------------------------------------------------------------
+// setLedBrightness
+//
+// sets the btp timezone in config struct
+// param1 (char): chararray containing the ntp timezone
+// param2 (int): size of chararray (usally `sizeof(arr)`)
+//
+//---------------------------------------------------------------------------------------
+void ConfigClass::setNtpTimezone(char* timezone, int bufsize)
+{
+    // copy chararray into config struct
+    memcpy(this->config->ntpTimezone, timezone, bufsize);
+    Serial.printf("NTP Timezone is set to: %s", this->config->ntpTimezone);
 }
