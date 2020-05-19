@@ -5,5 +5,6 @@
 
 void setupOTA();
 void otaStartDelay();
+bool isOtaInProgress();
 
 #endif

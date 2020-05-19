@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>ESP8266 Web Server</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="milligram.min.css.gz">
+</head>
+
+<body>
+    <h1>Wordclock Web Server</h1>
+    <div class="container">
+
+        <div class="row">
+            <div class="column">
+                <h3>Wordclock options</h3>
+                <form action="/config" method="POST" name="clockForm">
+                    <!-- LED color -->
+                    <label for="color">Color</label>
+                    <input type="color" id="color" onchange="clickColor(0, -1, -1, 5)" value="%CLOCK_COLOR%"
+                        name="color">
+                    <!-- LED brightness -->
+                    <label for="brightness">Brightness (current value: %CLOCK_BRIGHTNESS%)</label>
+                    <input type="range" id="brightness" name="brightness" min="0" max="254" step=5
+                        value="%CLOCK_BRIGHTNESS%" />
+                    <!-- Heartbeat enabled -->
+                    <label for="heartbeatEnabled">Heartbeat enabled?</label>
+                    <input type="checkbox" id="heartbeatEnabled" name="heartbeatEnabled" %CLOCK_HEARTBEATENABLED%>
+                    <!-- hostname -->
+                    <label for="hostname">Hostname</label>
+                    <input type="text" placeholder="%HOSTNAME%" id="hostname" name="hostname" value="%HOSTNAME%">
+                    <!-- Submit -->
+                    <input class="button-primary" type="submit" value="Send">
+                </form>
+                * mode
+                * single color
+                * colorselect
+                * rainbow
+            </div>
+            <div class="column">
+                <h3>NTP options</h3>
+                <p>NTP clock is set to: %NTP_TIME%</p>
+                <form action="/config" method="POST" name="ntpForm">
+                    <fieldset>
+                        <label for="ntpTimezone">Timezone</label>
+                        <input type="text" placeholder="%NTP_STIMEZONE%" id="ntpTimezone" name="ntpTimezone"
+                            value="%NTP_TIMEZONE%">
+                        <label for="ntpServername">NTP Server</label>
+                        <input type="text" placeholder="%NTP_SERVERNAME%" id="ntpServername" name="ntpServername"
+                            value="%NTP_SERVERNAME%">
+                        <input class="button-primary" type="submit" value="Send">
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="column">.column</div>
+            <div class="column">
+                <h3>Debug menu</h3>
+                <p><a href="/config.json">config.json on flash memory (persistent)</a></p>
+                <p>NTP Status: %NTP_TIMESTATUS%</p>
+                <p>
+                <form action="/config" method="POST" name="debugReset">
+                    <input class="button-primary" type="submit" name="resetConfig" value="Reset config to defaults">
+                </form>
+                </p>
+                <p>%ANY_DEBUGMESSAGE%</p>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

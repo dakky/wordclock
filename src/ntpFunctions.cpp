@@ -1,24 +1,37 @@
 #include "ntpFunctions.h"
+#include "configuration.h"
 
 Timezone clockTimezoned;
 
-void setupNtpClock() {
+void setupNtpClock()
+{
     Serial.println("Setup NTPClock: Initializing ...");
-    
-    setInterval(60 * NTP_UPDATE_INTERVAL_MINS);
-    setServer(NTP_SERVER_NAME);
 
-    waitForSync();
+    debugI("Settings NTP server to: %s", Config.getNtpServername());
+    setServer(Config.getNtpServername());
 
-	Serial.println("UTC: " + UTC.dateTime());
-	
-    //TODO: Location will only be set once ... will fix this when the webui is in place
-	if (!clockTimezoned.setCache(0)) 
+    int attemptCnt = 1;
+    while (!waitForSync(10))
     {
-        clockTimezoned.setLocation(NTP_TIMEZONE);
+        attemptCnt++;
+        Serial.println("NTP Sync: retrying...");
+        blankscreen();
+        word2stripe(word_OTAERROR, sizeof(word_OTAERROR) / sizeof(int), CRGB::Red);
+        FastLED.show();
+        if (attemptCnt == 3) 
+        {
+            updateNTP();
+            break;
+        }
     }
-    
-	Serial.println("Local time (" + clockTimezoned.getTimezoneName() +"): " + clockTimezoned.dateTime());
-    
+
+    Serial.println("UTC: " + UTC.dateTime());
+    //TODO: Location will only be set once ... will fix this when the webui is in place
+    if (!clockTimezoned.setCache(0))
+    {
+        clockTimezoned.setLocation(Config.getNtpTimezone());
+    }
+    Serial.println("Local time (" + clockTimezoned.getTimezoneName() + "): " + clockTimezoned.dateTime());
+
     Serial.println("Setup NTPClock: Done ...");
 }
