@@ -129,7 +129,6 @@ void setupWebserver()
 //---------------------------------------------------------------------------------------
 String webserverProcessHtmlTemplate(const String &var)
 {
-    Serial.println(var);
     if (var == "CLOCK_BRIGHTNESS")
     {
         return String(Config.getLedBrightness());
@@ -166,12 +165,12 @@ String webserverProcessHtmlTemplate(const String &var)
     }
     if (var == "HOSTNAME")
     {
-        return String(timeStatus());
+        return String(Config.getHostname());
     }
     // for any message i need to debug without serial connected
     if (var == "ANY_DEBUGMESSAGE")
     {
-        return String(Config.getHeartbeat());
+        return String("Anymessage: " + Config.getHeartbeat());
     }
     return String();
 }
