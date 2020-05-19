@@ -15,10 +15,10 @@ void setupNtpClock()
     {
         attemptCnt++;
         Serial.println("NTP Sync: retrying...");
-        blankscreen();
-        word2stripe(word_OTAERROR, sizeof(word_OTAERROR) / sizeof(int), CRGB::Red);
+        LED.blankscreen();
+        LED.word2stripe(word_OTAERROR, sizeof(word_OTAERROR) / sizeof(int), CRGB::Red);
         FastLED.show();
-        if (attemptCnt == 3) 
+        if (attemptCnt == 3)
         {
             updateNTP();
             break;

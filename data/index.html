@@ -17,6 +17,14 @@
             <div class="column">
                 <h3>Wordclock options</h3>
                 <form action="/config" method="POST" name="clockForm">
+                    <!-- ledMode -->
+                    <label for="ledMode">Color</label>
+                    <select id="ledMode" name="ledMode">
+                        <option value="1">Simple Color Mode</option>
+                        <option value="2">Rainbow Mode</option>
+                      </select>
+                    <input type="color" id="ledMode" onchange="clickColor(0, -1, -1, 5)" value="%CLOCK_LED_MODE%"
+                        name="ledMode">
                     <!-- LED color -->
                     <label for="color">Color</label>
                     <input type="color" id="color" onchange="clickColor(0, -1, -1, 5)" value="%CLOCK_COLOR%"
