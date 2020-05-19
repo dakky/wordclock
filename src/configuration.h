@@ -23,6 +23,7 @@ typedef struct _config_struct
 {
     int  ledBrightness;
     char  ledSimpleColor[9];
+    byte ledMode;
     bool heartbeatEnabled;
     int  dataPin;
     char ntpServername[25];
@@ -34,7 +35,7 @@ class ConfigClass
 {
 public:
     ConfigClass();
-    virtual ~ConfigClass();
+    ~ConfigClass();
     void begin();
     void save();
     void load();
@@ -42,6 +43,8 @@ public:
     void print();
     int getLedBrightness();
     void setLedBrightness(int);
+    byte getLedMode();
+    void setLedMode(byte);
     char* getLedSimpleColor();
     void setLedSimpleColor(char*,int);
     char* getNtpServername();

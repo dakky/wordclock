@@ -77,6 +77,10 @@ void setupWebserver()
             color.toCharArray(buf,str_len);
             Config.setLedSimpleColor(buf, str_len);
         }
+        if (request->hasParam("ledMode", true))
+        {
+            Config.setLedBrightness(request->getParam("ledMode", true)->value().toInt());
+        }
         if (request->hasParam("heartbeatEnabled", true))
         {
             Config.setHeartbeat(request->getParam("heartbeatEnabled", true)->value());
@@ -160,7 +164,7 @@ String webserverProcessHtmlTemplate(const String &var)
     {
         if (Config.getHeartbeat())
         {
-            return String("checked");
+            return String("checked=checked");
         }
     }
     if (var == "HOSTNAME")
