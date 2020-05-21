@@ -38,10 +38,10 @@ void setupWifi()
     }
 
     LED.word2stripe(word_WIFIMANAGER, sizeof(word_WIFIMANAGER) / sizeof(int), CRGB::Green);
-    FastLED.show();
+    LED.fadeTargetToLive();
     delay(3000); // this function is called in setup only => delay is okay imho
     LED.blankscreen();
-    FastLED.show();
+    LED.fadeTargetToLive();
 }
 
 //---------------------------------------------------------------------------------------
@@ -55,7 +55,7 @@ void wifimanagerConfigModeCallback(AsyncWiFiManager *myWiFiManager)
     // show "wifimanager word (words.h)"
     LED.blankscreen();
     LED.word2stripe(word_WIFIMANAGER, sizeof(word_WIFIMANAGER) / sizeof(int), CRGB::Yellow);
-    FastLED.show();
+    LED.fadeTargetToLive();
     Serial.println("Entered WIFIManager config mode");
     Serial.println(WiFi.softAPIP());
     Serial.println(myWiFiManager->getConfigPortalSSID());

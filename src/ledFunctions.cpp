@@ -55,7 +55,7 @@ LedFunctionsClass::~LedFunctionsClass()
 void LedFunctionsClass::begin()
 {
     Serial.println("Setup LEDs: Initializing ...");
-    FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, NUM_LEDS);
+    FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds_live, NUM_LEDS);
     Serial.println("Setup LEDs: Done ...");
 }
 
@@ -77,60 +77,127 @@ void LedFunctionsClass::word2stripe(const int word[], int len, CRGB color)
 
     for (int letter = 0; letter < len; letter++)
     {
-        this->leds[word[letter]] = color;
+        this->leds_live[word[letter]] = color;
     }
 }
 
 void LedFunctionsClass::word2stripe(const int word[], int len)
 {
-
-    // detect mode:
-    // Singlecolor = 1
-    // Rainbow = 2
     FastLED.setBrightness(Config.getLedBrightness());
 
-    long currentSimpleColor;
-
-    if (Config.getLedMode() == 2)
-    {
-        currentPalette = RainbowColors_p;
-        currentBlending = LINEARBLEND;
-    } else {
-        currentSimpleColor = strtol(Config.getLedSimpleColor(),NULL,0);
-    }
-
+    // cast hex to long
+    long currentSimpleColor = strtol(Config.getLedSimpleColor(), NULL, 0);
 
     for (int letter = 0; letter < len; letter++)
     {
-        this->leds[word[letter]] = currentSimpleColor;
+        this->leds_target[word[letter]] = currentSimpleColor;
     }
 }
 
 //---------------------------------------------------------------------------------------
 // blankscreen
 //
-// set all LEDs to black
+// set all LEDs on the target array to black
 //
 // Params:
 // . should the display be updated immediately (true/false)
 //---------------------------------------------------------------------------------------
 void LedFunctionsClass::blankscreen()
 {
-    CRGB color = CRGB::Black;
-
-    for (int led = 0; led < NUM_LEDS; led++)
+    debugD("Setting all pixels on leds_target to BLACK.");
+    for (int pixel = 0; pixel < NUM_LEDS; pixel++)
     {
-        leds[led] = color;
+        leds_target[pixel] = CRGB::Black;
     }
 }
 
 //---------------------------------------------------------------------------------------
-// showWords
+// switchTargetToLive
 //
-// simply show all words
+// copies die targetArray to the LiveArray => display at once
+//---------------------------------------------------------------------------------------
+void LedFunctionsClass::switchTargetToLive(){
+    for (int pixel = 0; pixel < NUM_LEDS; pixel++)
+    {
+        leds_live[pixel] = leds_target[pixel];
+    }
+    FastLED.show();
+}
+//---------------------------------------------------------------------------------------
+// fadeTargetToLive
+//
+// compares the array with the information which LEDs too light up (target)
+// with the array which is actually preseting the LEDs (live)
+// and fills up the brightness array with the information, which LEDs to switch off
+// and which LEDs to switch off
+//---------------------------------------------------------------------------------------
+void LedFunctionsClass::fadeTargetToLive(uint8_t amount)
+{
+    while (memcmp(this->leds_live, this->leds_target, sizeof(this->leds_live)) != 0)
+    {
+        for (int pixel = 0; pixel < NUM_LEDS; pixel++)
+        {
+            blendIntToInt(this->leds_live[pixel].red,   this->leds_target[pixel].red,   amount);
+            blendIntToInt(this->leds_live[pixel].green, this->leds_target[pixel].green, amount);
+            blendIntToInt(this->leds_live[pixel].blue,  this->leds_target[pixel].blue,  amount);
+        }
+        FastLED.delay(10);
+    }
+}
+
+//---------------------------------------------------------------------------------------
+// blendIntToInt
+//
+// Uses FastLED to blend over to the target color. It updates the new value directly
+// in the array with the live pixels
 //
 //---------------------------------------------------------------------------------------
-void LedFunctionsClass::showWords()
+void LedFunctionsClass::blendIntToInt(uint8_t &cur, const uint8_t target, uint8_t amount)
 {
-    FastLED.show();
+    // LED already has requested color => do nothing
+    if (cur == target)
+        return;
+
+    if (cur < target)
+    {
+        uint8_t delta = target - cur;
+        delta = scale8_video(delta, amount);
+        cur += delta;
+    }
+    else
+    {
+        uint8_t delta = cur - target;
+        delta = scale8_video(delta, amount);
+        cur -= delta;
+    }
+}
+
+void LedFunctionsClass::printDebugArray() {
+    String debugString1;
+    String debugString2;
+    for (int pixel = 0; pixel < NUM_LEDS; pixel++)
+    {
+        if (leds_target[pixel]) 
+        {
+            debugString1.concat(1);
+        } else {
+            debugString1.concat(0);
+        }
+        if (leds_live[pixel]) 
+        {
+            debugString2.concat(1);
+        } else {
+            debugString2.concat(0);
+        }
+    }
+    debugD("TARGET array: %s", debugString1.c_str());
+    debugD("LIVE array:   %s", debugString2.c_str());
+}
+
+bool LedFunctionsClass::updatesBlocked() {
+    return this->blockUpdates;
+}
+
+void LedFunctionsClass::updatesBlocked(bool enable) {
+    this->blockUpdates = enable;
 }

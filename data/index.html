@@ -18,13 +18,11 @@
                 <h3>Wordclock options</h3>
                 <form action="/config" method="POST" name="clockForm">
                     <!-- ledMode -->
-                    <label for="ledMode">Color</label>
+                    <label for="ledMode">LED Modus</label>
                     <select id="ledMode" name="ledMode">
                         <option value="1">Simple Color Mode</option>
                         <option value="2">Rainbow Mode</option>
-                      </select>
-                    <input type="color" id="ledMode" onchange="clickColor(0, -1, -1, 5)" value="%CLOCK_LED_MODE%"
-                        name="ledMode">
+                    </select>
                     <!-- LED color -->
                     <label for="color">Color</label>
                     <input type="color" id="color" onchange="clickColor(0, -1, -1, 5)" value="%CLOCK_COLOR%"
@@ -72,6 +70,16 @@
                 <p>
                 <form action="/config" method="POST" name="debugReset">
                     <input class="button-primary" type="submit" name="resetConfig" value="Reset config to defaults">
+                </form>
+                </p>
+                <p>
+                <form action="/config" method="POST" name="debugDummyTime">
+                    <input class="button-primary" type="submit" name="debugDummyTime"
+                        value="Set time to dummy value: 23:12">
+                </form>
+                <form action="/config" method="POST" name="debugDummyTimeNow">
+                    <input class="button-primary" type="submit" name="debugDummyTimeNow"
+                        value="Set time to NOW">
                 </form>
                 </p>
                 <p>%ANY_DEBUGMESSAGE%</p>

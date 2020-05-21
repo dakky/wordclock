@@ -54,17 +54,19 @@ TimefunctionsClass::~TimefunctionsClass()
 // assembles the words for the actual time and pushes to the stripe
 //
 //---------------------------------------------------------------------------------------
-void TimefunctionsClass::timeToStripe()
-{
+void TimefunctionsClass::timeToStripe(){
+
     uint8_t hours = clockTimezoned.hour();
     uint8_t minutes = clockTimezoned.minute();
 
-    if (secondChanged()) {
-        debugI("Setting LEDs to: %u:%u", hours, minutes);
-    }
+    this->timeToStripe(hours, minutes);
+}
 
+void TimefunctionsClass::timeToStripe(uint8_t hours, uint8_t minutes)
+{
     // clearing stripe
     LED.blankscreen();
+    LED.printDebugArray();
 
     // show "ES IST"
     LED.word2stripe(word_ES, sizeof(word_ES) / sizeof(int));
@@ -212,10 +214,5 @@ void TimefunctionsClass::timeToStripe()
     {
         LED.word2stripe(word_UHR, sizeof(word_UHR) / sizeof(int));
     }
-}
-
-void TimefunctionsClass::test() {
-    if (secondChanged()) {
-        debugI("Triggered");
-    }
+    LED.printDebugArray();
 }
