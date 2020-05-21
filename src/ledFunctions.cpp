@@ -73,25 +73,22 @@ void LedFunctionsClass::begin()
 //---------------------------------------------------------------------------------------
 void LedFunctionsClass::word2stripe(const int word[], int len, CRGB color)
 {
-    FastLED.setBrightness(Config.getLedBrightness());
+    // in case the update of die LED Stripe is blocked, quit here
+    if (this->updatesBlocked()) return;
 
+    FastLED.setBrightness(Config.getLedBrightness());
+    
     for (int letter = 0; letter < len; letter++)
     {
-        this->leds_live[word[letter]] = color;
+        this->leds_target[word[letter]] = color;
     }
 }
 
 void LedFunctionsClass::word2stripe(const int word[], int len)
 {
-    FastLED.setBrightness(Config.getLedBrightness());
+    CRGB configuredColor = strtol(Config.getLedSimpleColor(), NULL, 0);
 
-    // cast hex to long
-    long currentSimpleColor = strtol(Config.getLedSimpleColor(), NULL, 0);
-
-    for (int letter = 0; letter < len; letter++)
-    {
-        this->leds_target[word[letter]] = currentSimpleColor;
-    }
+    this->word2stripe(word, len, configuredColor);
 }
 
 //---------------------------------------------------------------------------------------
@@ -104,10 +101,13 @@ void LedFunctionsClass::word2stripe(const int word[], int len)
 //---------------------------------------------------------------------------------------
 void LedFunctionsClass::blankscreen()
 {
+    // in case the update of die LED Stripe is blocked, quit here
+    if (this->updatesBlocked()) return;
+    
     debugD("Setting all pixels on leds_target to BLACK.");
     for (int pixel = 0; pixel < NUM_LEDS; pixel++)
     {
-        leds_target[pixel] = CRGB::Black;
+        this->leds_target[pixel] = CRGB::Black;
     }
 }
 

@@ -173,7 +173,11 @@ String webserverProcessHtmlTemplate(const String &var)
         if (Config.getHeartbeat())
         {
             return String("checked=checked");
+        } else
+        {
+            return String("");
         }
+        
     }
     if (var == "HOSTNAME")
     {
