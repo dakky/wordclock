@@ -41,10 +41,14 @@ void loop()
         return;
     // otaStartDelay();
 
-    Debug.handle(); // handle telnet connection
+    Debug.handle();   // handle telnet connection
     events();         // from ezTime.h: gets ntp time if nessesary
     runner.execute(); // run additionals tasks (heartbeat)
-    WordclockTime.timeToStripe();   // update LEDs to be lighted up
-    FastLED.delay(1000 / FRAMES_PER_SECOND );
-    WordclockTime.test();
+    if (minuteChanged())
+    {
+        WordclockTime.timeToStripe(); // update LEDs on the target array to be lighted up
+    }
+    // has to be done here, if called in i.e. timeToStripe it takes to long and the esp crashes
+    LED.fadeTargetToLive(25); 
+    FastLED.delay(1000 / FRAMES_PER_SECOND);
 }

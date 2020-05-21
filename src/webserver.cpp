@@ -79,7 +79,7 @@ void setupWebserver()
         }
         if (request->hasParam("ledMode", true))
         {
-            Config.setLedBrightness(request->getParam("ledMode", true)->value().toInt());
+            Config.setLedMode(request->getParam("ledMode", true)->value().toInt());
         }
         if (request->hasParam("heartbeatEnabled", true))
         {
@@ -112,6 +112,14 @@ void setupWebserver()
         if (request->hasParam("resetConfig", true))
         {
             Config.reset();
+        }
+        if (request->hasParam("debugDummyTime", true))
+        {
+            WordclockTime.timeToStripe(23,12);
+        }
+        if (request->hasParam("debugDummyTimeNow", true))
+        {
+            WordclockTime.timeToStripe();
         }
         // request->send(200, "text/plain", message);
         request->redirect("/");

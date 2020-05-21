@@ -29,15 +29,22 @@ class LedFunctionsClass {
         void word2stripe(const int word[], int, CRGB);
         void word2stripe(const int word[], int);
         void blankscreen();
-        void showWords();
+        void fadeTargetToLive(uint8_t amount = 25);
+        void switchTargetToLive();
+        void printDebugArray();
+        bool updatesBlocked();
+        void updatesBlocked(bool);
 
     private:
-        CRGB leds[NUM_LEDS];
-        CRGB leds_backup[NUM_LEDS];
+        void blendIntToInt(uint8_t &cur, const uint8_t, uint8_t);
+
+        CRGB leds_live[NUM_LEDS];
+        CRGB leds_target[NUM_LEDS];
         int dataPin;
         CRGBPalette16 currentPalette;
         TBlendType    currentBlending;
         long currentSimpleColor;
+        bool blockUpdates = false;
 };
 
 extern LedFunctionsClass LED;

@@ -19,13 +19,14 @@
 #ifndef _TIMEFUNCTIONS_H_
 #define _TIMEFUNCTIONS_H_
 
+#include <Arduino.h>
 class TimefunctionsClass
 {
     public:
         TimefunctionsClass();
         ~TimefunctionsClass();
         void timeToStripe();
-        void test();
+        void timeToStripe(uint8_t, uint8_t);
 };
 
 extern TimefunctionsClass WordclockTime;
