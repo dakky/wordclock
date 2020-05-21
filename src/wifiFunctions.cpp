@@ -25,7 +25,7 @@ void setupWifi()
     {
         Serial.println("Setup Wifi: Failed to connect, timeout");
         LED.updatesBlocked(false);
-        LED.word2stripe(word_WIFIMANAGER, sizeof(word_WIFIMANAGER) / sizeof(int), CRGB::Red);
+        LED.word2stripe(word_QUESTIONMARK, sizeof(word_QUESTIONMARK) / sizeof(int), CRGB::Red);
         LED.updatesBlocked(true);
         LED.fadeTargetToLive();
         delay(3000);
@@ -41,7 +41,7 @@ void setupWifi()
     }
 
     LED.updatesBlocked(false);
-    LED.word2stripe(word_WIFIMANAGER, sizeof(word_WIFIMANAGER) / sizeof(int), CRGB::Green);
+    LED.word2stripe(word_QUESTIONMARK, sizeof(word_QUESTIONMARK) / sizeof(int), CRGB::Green);
     LED.updatesBlocked(true);
     LED.fadeTargetToLive();
     delay(3000); // this function is called in setup only => delay is okay imho
@@ -59,7 +59,7 @@ void wifimanagerConfigModeCallback(AsyncWiFiManager *myWiFiManager)
     // show "wifimanager word (words.h)"
     LED.updatesBlocked(false);
     LED.blankscreen();
-    LED.word2stripe(word_WIFIMANAGER, sizeof(word_WIFIMANAGER) / sizeof(int), CRGB::Yellow);
+    LED.word2stripe(word_QUESTIONMARK, sizeof(word_QUESTIONMARK) / sizeof(int), CRGB::Yellow);
     LED.updatesBlocked(true);
     LED.fadeTargetToLive();
     Serial.println("Entered WIFIManager config mode");

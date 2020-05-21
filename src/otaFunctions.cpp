@@ -28,7 +28,7 @@ void setupOTA()
 
     ArduinoOTA.onProgress([](unsigned int progress, unsigned int total) {
         LED.blankscreen();
-        LED.word2stripe(word_OTAPROGRESS, sizeof(word_OTAPROGRESS) / sizeof(int), CRGB::Yellow);
+        LED.word2stripe(word_ARROWDOWN, sizeof(word_ARROWDOWN) / sizeof(int), CRGB::Yellow);
         LED.updatesBlocked(true);
         LED.fadeTargetToLive();
         //Config.updateProgress = progress * 110 / total;
@@ -39,7 +39,7 @@ void setupOTA()
         // allow updates shortly to light up resultand forbid updates afterwards again
         LED.updatesBlocked(false);
         LED.blankscreen();
-        LED.word2stripe(word_OTASUCCESS, sizeof(word_OTASUCCESS) / sizeof(int), CRGB::Green);
+        LED.word2stripe(word_CHECKMARK, sizeof(word_CHECKMARK) / sizeof(int), CRGB::Green);
         LED.updatesBlocked(true);
         LED.fadeTargetToLive();
         Serial.println("\nOTA End");
@@ -49,7 +49,7 @@ void setupOTA()
         // allow updates shortly to light up resultand forbid updates afterwards again
         LED.updatesBlocked(false);
         LED.blankscreen();
-        LED.word2stripe(word_OTAERROR, sizeof(word_OTAERROR) / sizeof(int), CRGB::Red);
+        LED.word2stripe(word_CROSS, sizeof(word_CROSS) / sizeof(int), CRGB::Red);
         LED.updatesBlocked(true);
         LED.fadeTargetToLive();
         Serial.printf("OTA Error[%u]: ", error);
