@@ -29,22 +29,28 @@ void setupOTA()
     ArduinoOTA.onProgress([](unsigned int progress, unsigned int total) {
         LED.blankscreen();
         LED.word2stripe(word_OTAPROGRESS, sizeof(word_OTAPROGRESS) / sizeof(int), CRGB::Yellow);
-        // don't fade here: will be called very often for every transmitted OTA package
-        LED.switchTargetToLive();
+        LED.updatesBlocked(true);
+        LED.fadeTargetToLive();
         //Config.updateProgress = progress * 110 / total;
         Serial.printf("OTA Progress: %u%%\r\n", (progress / (total / 100)));
     });
 
     ArduinoOTA.onEnd([]() {
+        // allow updates shortly to light up resultand forbid updates afterwards again
+        LED.updatesBlocked(false);
         LED.blankscreen();
         LED.word2stripe(word_OTASUCCESS, sizeof(word_OTASUCCESS) / sizeof(int), CRGB::Green);
+        LED.updatesBlocked(true);
         LED.fadeTargetToLive();
         Serial.println("\nOTA End");
     });
 
     ArduinoOTA.onError([](ota_error_t error) {
+        // allow updates shortly to light up resultand forbid updates afterwards again
+        LED.updatesBlocked(false);
         LED.blankscreen();
         LED.word2stripe(word_OTAERROR, sizeof(word_OTAERROR) / sizeof(int), CRGB::Red);
+        LED.updatesBlocked(true);
         LED.fadeTargetToLive();
         Serial.printf("OTA Error[%u]: ", error);
         if (error == OTA_AUTH_ERROR)
