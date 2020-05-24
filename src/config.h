@@ -4,7 +4,7 @@
 #include "globals.h"
 
 #define NUM_LEDS 114
-#define DATA_PIN 15 // D8 on wemos
+#define DATA_PIN 2 // D4 on wemos
 
 #define FRAMES_PER_SECOND 20
 
