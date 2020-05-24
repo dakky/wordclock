@@ -41,10 +41,11 @@ class LedFunctionsClass {
         CRGB leds_live[NUM_LEDS];
         CRGB leds_target[NUM_LEDS];
         int dataPin;
-        CRGBPalette16 currentPalette;
-        TBlendType    currentBlending;
         long currentSimpleColor;
         bool blockUpdates = false;
+        long lastAutoColorChange = 0;
+        uint8_t paletteColorIndex = 0;
+        uint8_t paletteColorIndexStepper = 16;
 };
 
 extern LedFunctionsClass LED;
