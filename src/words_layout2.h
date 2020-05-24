@@ -77,8 +77,8 @@ const int word_ZWOELF[]  {X6Y5, X7Y5, X8Y5, X9Y5, X10Y5};
 const int word_ZWANZIG[] {X5Y2, X6Y2, X7Y2, X8Y2, X9Y2, X10Y2, X11Y2};
 
 // Special words
-// WIFIMANAGER => "Wifi" Icon
-const int word_WIFIMANAGER[] { 
+// Question mark
+const int word_QUESTIONMARK[] { 
     X4Y1, X5Y1, X6Y1, X7Y1,
     X3Y2, X4Y2, X7Y2, X8Y2,
     X3Y3, X4Y3, X7Y3, X8Y3,
@@ -90,8 +90,8 @@ const int word_WIFIMANAGER[] {
     X5Y10, X6Y10,
     MIN1, MIN2, MIN3, MIN4};
 
-// OTA in progress => "Arrow down" Icon
-const int word_OTAPROGRESS[] { 
+//"Arrow down" Icon
+const int word_ARROWDOWN[] { 
     X5Y1, X6Y1, X7Y1,
     X5Y2, X7Y2,
     X5Y3, X7Y3,
@@ -104,8 +104,8 @@ const int word_OTAPROGRESS[] {
     X6Y10,
     MIN1, MIN2, MIN3, MIN4};
 
-// OTA in succeeded => "Check mark" Icon
-const int word_OTASUCCESS[] { 
+// "Check mark" Icon
+const int word_CHECKMARK[] { 
     X10Y3,
     X9Y4,
     X8Y5,
@@ -116,7 +116,7 @@ const int word_OTASUCCESS[] {
     MIN1, MIN2, MIN3, MIN4};
 
 // OTA in failed => "Cross mark" Icon
-const int word_OTAERROR[] { 
+const int word_CROSS[] { 
     X3Y2, X4Y2, X8Y2, X9Y2,
     X4Y3, X5Y3, X7Y3, X8Y3,
     X5Y4, X6Y4, X7Y4, 

@@ -77,6 +77,10 @@ void setupWebserver()
             color.toCharArray(buf,str_len);
             Config.setLedSimpleColor(buf, str_len);
         }
+        if (request->hasParam("ledMode", true))
+        {
+            Config.setLedMode(request->getParam("ledMode", true)->value().toInt());
+        }
         if (request->hasParam("heartbeatEnabled", true))
         {
             Config.setHeartbeat(request->getParam("heartbeatEnabled", true)->value());
@@ -108,6 +112,14 @@ void setupWebserver()
         if (request->hasParam("resetConfig", true))
         {
             Config.reset();
+        }
+        if (request->hasParam("debugDummyTime", true))
+        {
+            WordclockTime.timeToStripe(23,12);
+        }
+        if (request->hasParam("debugDummyTimeNow", true))
+        {
+            WordclockTime.timeToStripe();
         }
         // request->send(200, "text/plain", message);
         request->redirect("/");
@@ -160,8 +172,12 @@ String webserverProcessHtmlTemplate(const String &var)
     {
         if (Config.getHeartbeat())
         {
-            return String("checked");
+            return String("checked=checked");
+        } else
+        {
+            return String("");
         }
+        
     }
     if (var == "HOSTNAME")
     {
