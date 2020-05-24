@@ -74,10 +74,11 @@ void LedFunctionsClass::begin()
 void LedFunctionsClass::word2stripe(const int word[], int len, CRGB color)
 {
     // in case the update of die LED Stripe is blocked, quit here
-    if (this->updatesBlocked()) return;
+    if (this->updatesBlocked())
+        return;
 
     FastLED.setBrightness(Config.getLedBrightness());
-    
+
     for (int letter = 0; letter < len; letter++)
     {
         this->leds_target[word[letter]] = color;
@@ -86,9 +87,32 @@ void LedFunctionsClass::word2stripe(const int word[], int len, CRGB color)
 
 void LedFunctionsClass::word2stripe(const int word[], int len)
 {
-    CRGB configuredColor = strtol(Config.getLedSimpleColor(), NULL, 0);
+    CRGB color;
 
-    this->word2stripe(word, len, configuredColor);
+    if (Config.getLedMode() == 1)
+    {
+        color = strtol(Config.getLedSimpleColor(), NULL, 0);
+    }
+    else if (Config.getLedMode() == 2)
+    {
+        color = ColorFromPalette(RainbowColors_p, this->paletteColorIndex);
+        if (millis() - this->lastAutoColorChange > 5000)
+        {
+            // calculate index. it should bounce between 0 and 255
+            if (this->paletteColorIndex >= 256)
+            {
+                this->paletteColorIndexStepper = -2;
+            }
+            if (this->paletteColorIndex <= 0)
+            {
+                this->paletteColorIndexStepper = 2;
+            }
+            this->paletteColorIndex = this->paletteColorIndex + this->paletteColorIndexStepper;
+            this->lastAutoColorChange = millis();
+        }
+    }
+
+    this->word2stripe(word, len, color);
 }
 
 //---------------------------------------------------------------------------------------
@@ -102,9 +126,9 @@ void LedFunctionsClass::word2stripe(const int word[], int len)
 void LedFunctionsClass::blankscreen()
 {
     // in case the update of die LED Stripe is blocked, quit here
-    if (this->updatesBlocked()) return;
-    
-    debugD("Setting all pixels on leds_target to BLACK.");
+    if (this->updatesBlocked())
+        return;
+
     for (int pixel = 0; pixel < NUM_LEDS; pixel++)
     {
         this->leds_target[pixel] = CRGB::Black;
@@ -116,7 +140,8 @@ void LedFunctionsClass::blankscreen()
 //
 // copies die targetArray to the LiveArray => display at once
 //---------------------------------------------------------------------------------------
-void LedFunctionsClass::switchTargetToLive(){
+void LedFunctionsClass::switchTargetToLive()
+{
     for (int pixel = 0; pixel < NUM_LEDS; pixel++)
     {
         leds_live[pixel] = leds_target[pixel];
@@ -137,9 +162,9 @@ void LedFunctionsClass::fadeTargetToLive(uint8_t amount)
     {
         for (int pixel = 0; pixel < NUM_LEDS; pixel++)
         {
-            blendIntToInt(this->leds_live[pixel].red,   this->leds_target[pixel].red,   amount);
+            blendIntToInt(this->leds_live[pixel].red, this->leds_target[pixel].red, amount);
             blendIntToInt(this->leds_live[pixel].green, this->leds_target[pixel].green, amount);
-            blendIntToInt(this->leds_live[pixel].blue,  this->leds_target[pixel].blue,  amount);
+            blendIntToInt(this->leds_live[pixel].blue, this->leds_target[pixel].blue, amount);
         }
         FastLED.delay(10);
     }
@@ -172,21 +197,26 @@ void LedFunctionsClass::blendIntToInt(uint8_t &cur, const uint8_t target, uint8_
     }
 }
 
-void LedFunctionsClass::printDebugArray() {
+void LedFunctionsClass::printDebugArray()
+{
     String debugString1;
     String debugString2;
     for (int pixel = 0; pixel < NUM_LEDS; pixel++)
     {
-        if (leds_target[pixel]) 
+        if (leds_target[pixel])
         {
             debugString1.concat(1);
-        } else {
+        }
+        else
+        {
             debugString1.concat(0);
         }
-        if (leds_live[pixel]) 
+        if (leds_live[pixel])
         {
             debugString2.concat(1);
-        } else {
+        }
+        else
+        {
             debugString2.concat(0);
         }
     }
@@ -194,10 +224,12 @@ void LedFunctionsClass::printDebugArray() {
     debugD("LIVE array:   %s", debugString2.c_str());
 }
 
-bool LedFunctionsClass::updatesBlocked() {
+bool LedFunctionsClass::updatesBlocked()
+{
     return this->blockUpdates;
 }
 
-void LedFunctionsClass::updatesBlocked(bool enable) {
+void LedFunctionsClass::updatesBlocked(bool enable)
+{
     this->blockUpdates = enable;
 }

@@ -66,7 +66,6 @@ void TimefunctionsClass::timeToStripe(uint8_t hours, uint8_t minutes)
 {
     // clearing stripe
     LED.blankscreen();
-    LED.printDebugArray();
 
     // show "ES IST"
     LED.word2stripe(word_ES, sizeof(word_ES) / sizeof(int));
@@ -214,5 +213,4 @@ void TimefunctionsClass::timeToStripe(uint8_t hours, uint8_t minutes)
     {
         LED.word2stripe(word_UHR, sizeof(word_UHR) / sizeof(int));
     }
-    LED.printDebugArray();
 }
