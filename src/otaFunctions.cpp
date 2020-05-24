@@ -27,24 +27,31 @@ void setupOTA()
     });
 
     ArduinoOTA.onProgress([](unsigned int progress, unsigned int total) {
-        blankscreen();
-        word2stripe(word_OTAPROGRESS, sizeof(word_OTAPROGRESS) / sizeof(int), CRGB::Yellow);
-        FastLED.show();
+        LED.blankscreen();
+        LED.word2stripe(word_ARROWDOWN, sizeof(word_ARROWDOWN) / sizeof(int), CRGB::Yellow);
+        LED.updatesBlocked(true);
+        LED.fadeTargetToLive();
         //Config.updateProgress = progress * 110 / total;
         Serial.printf("OTA Progress: %u%%\r\n", (progress / (total / 100)));
     });
 
     ArduinoOTA.onEnd([]() {
-        blankscreen();
-        word2stripe(word_OTASUCCESS, sizeof(word_OTASUCCESS) / sizeof(int), CRGB::Green);
-        FastLED.show();
+        // allow updates shortly to light up resultand forbid updates afterwards again
+        LED.updatesBlocked(false);
+        LED.blankscreen();
+        LED.word2stripe(word_CHECKMARK, sizeof(word_CHECKMARK) / sizeof(int), CRGB::Green);
+        LED.updatesBlocked(true);
+        LED.fadeTargetToLive();
         Serial.println("\nOTA End");
     });
 
     ArduinoOTA.onError([](ota_error_t error) {
-        blankscreen();
-        word2stripe(word_OTAERROR, sizeof(word_OTAERROR) / sizeof(int), CRGB::Red);
-        FastLED.show();
+        // allow updates shortly to light up resultand forbid updates afterwards again
+        LED.updatesBlocked(false);
+        LED.blankscreen();
+        LED.word2stripe(word_CROSS, sizeof(word_CROSS) / sizeof(int), CRGB::Red);
+        LED.updatesBlocked(true);
+        LED.fadeTargetToLive();
         Serial.printf("OTA Error[%u]: ", error);
         if (error == OTA_AUTH_ERROR)
             Serial.println("Auth Failed");
@@ -69,8 +76,8 @@ void otaStartDelay()
     if (updateCountdown)
     {
         debugI("Delaying startup of wordclock for %i ms", OTA_STARTUP_DELAY);
-        blankscreen();
-        word2stripe(word_HOURGLASS, sizeof(word_HOURGLASS) / sizeof(int), CRGB::Green);
+        LED.blankscreen();
+        LED.word2stripe(word_HOURGLASS, sizeof(word_HOURGLASS) / sizeof(int), CRGB::Green);
         Serial.print(".");
         delay(100);
         updateCountdown--;
@@ -79,7 +86,7 @@ void otaStartDelay()
         {
             // wenn das startdelay fuer OTA vorbei ist, einfach weiter im text
             debugI("Startup delay has passed. Resuming normal operations");
-            blankscreen();
+            LED.blankscreen();
         }
         return;
     }

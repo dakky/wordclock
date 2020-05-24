@@ -36,7 +36,7 @@ ConfigClass Config = ConfigClass();
 //---------------------------------------------------------------------------------------
 ConfigClass::ConfigClass()
 {
-    this->reset();
+    // this->reset(); //???? why the fuck?
 }
 
 //---------------------------------------------------------------------------------------
@@ -100,6 +100,7 @@ void ConfigClass::load()
     // Copy values from the JsonDocument to the Config
     this->config->ledBrightness = doc["ledBrightness"];
     strlcpy(this->config->ledSimpleColor, doc["ledSimpleColor"], sizeof(this->config->ledSimpleColor));
+    this->config->ledMode = doc["ledMode"];
     this->config->heartbeatEnabled = doc["heartbeatEnabled"];
     this->config->dataPin = doc["dataPin"];
     strlcpy(this->config->ntpServername, doc["ntpServername"], sizeof(this->config->ntpServername));
@@ -123,6 +124,7 @@ void ConfigClass::reset()
     Serial.println("Configuration: Resetting to default values.");
     this->config->ledBrightness = 153;       // middle of 0..254
     strlcpy(this->config->ledSimpleColor, "0x7FFF00", sizeof(this->config->ledSimpleColor)); //light green
+    this->config->ledMode = 1; // simple color mode
     this->config->heartbeatEnabled = true;
     this->config->dataPin = 15; // D8 on Wemos Mini
     strlcpy(this->config->ntpServername, "europe.pool.ntp.org", sizeof(this->config->ntpServername));
@@ -162,6 +164,7 @@ void ConfigClass::save()
     // Set the values in the document
     doc["ledBrightness"] = this->config->ledBrightness;
     doc["ledSimpleColor"] = this->config->ledSimpleColor;
+    doc["ledMode"] = this->config->ledMode;
     doc["heartbeatEnabled"] = this->config->heartbeatEnabled;
     doc["dataPin"] = this->config->dataPin;
     doc["ntpServername"] = this->config->ntpServername;
@@ -258,6 +261,31 @@ void ConfigClass::setLedSimpleColor(char* color, int bufsize)
     // copy chararray into config struct
     memcpy(this->config->ledSimpleColor, color, bufsize);
     debugD("color is set to: %s", color);
+}
+
+//---------------------------------------------------------------------------------------
+// getLedMode
+//
+// gets the LedMode from config struct
+//
+//---------------------------------------------------------------------------------------
+byte ConfigClass::getLedMode()
+{
+    return this->config->ledMode;
+}
+
+//---------------------------------------------------------------------------------------
+// setLedBrightness
+//
+// sets the brightness in config struct
+// param1 (char): chararray containing the hexvalue of the color in format 0xFFFFFF
+// param2 (int): size of chararray (usally `sizeof(arr)`)
+//
+//---------------------------------------------------------------------------------------
+void ConfigClass::setLedMode(byte mode)
+{
+    this->config->ledMode = mode;
+    debugD("Led Mode is set to: %b", mode);
 }
 //---------------------------------------------------------------------------------------
 // getNtpServername
