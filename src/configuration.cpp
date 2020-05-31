@@ -388,4 +388,6 @@ void ConfigClass::setHostname(char* hostname, int bufsize)
     // copy chararray into config struct
     memcpy(this->config->hostname, hostname, bufsize);
     Serial.printf("Hostname is set to: %s", this->config->hostname);
+    delay(500);
+    ESP.reset();
 }

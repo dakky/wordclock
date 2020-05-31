@@ -70,4 +70,4 @@ void resetWifi() {
     // reset settings - for testing
     wifiManager.resetSettings();
     ESP.reset();
-}2
+}
