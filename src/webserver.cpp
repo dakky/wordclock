@@ -1,6 +1,7 @@
 #include "webserver.h"
 #include "configuration.h"
 #include "ntpFunctions.h"
+#include "wifiFunctions.h"
 
 //---------------------------------------------------------------------------------------
 // setupWebserver
@@ -112,6 +113,10 @@ void setupWebserver()
         if (request->hasParam("resetConfig", true))
         {
             Config.reset();
+        }
+        if (request->hasParam("resetWifiEeprom", true))
+        {
+            resetWifi();
         }
         if (request->hasParam("debugDummyTime", true))
         {
