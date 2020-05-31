@@ -4,6 +4,7 @@
 #include "config.h"
 
 void setupWifi();
+void resetWifi();
 void wifimanagerConfigModeCallback(AsyncWiFiManager  *myWiFiManager);
 
 #endif

@@ -45,7 +45,6 @@ void loop()
     events();         // from ezTime.h: gets ntp time if nessesary
     runner.execute(); // run additionals tasks (heartbeat)
     WordclockTime.timeToStripe(); // update LEDs on the target array to be lighted up
-    // has to be done here, if called in i.e. timeToStripe it takes to long and the esp crashes
-    LED.fadeTargetToLive(25); 
+    LED.fadeTargetToLive(25); // has to be done here, if called in i.e. timeToStripe it takes to long and the esp crashes
     FastLED.delay(1000 / FRAMES_PER_SECOND);
 }

@@ -68,8 +68,13 @@
                 <p><a href="/config.json">config.json on flash memory (persistent)</a></p>
                 <p>NTP Status: %NTP_TIMESTATUS%</p>
                 <p>
-                <form action="/config" method="POST" name="debugReset">
+                <form action="/config" method="POST" name="resetConfig">
                     <input class="button-primary" type="submit" name="resetConfig" value="Reset config to defaults">
+                </form>
+            </p>
+            <p>
+                <form action="/config" method="POST" name="resetWifiEeprom">
+                    <input class="button-primary" type="submit" name="resetWifiEeprom" value="Clear Wifisetting from EEPROM">
                 </form>
                 </p>
                 <p>
@@ -78,8 +83,7 @@
                         value="Set time to dummy value: 23:12">
                 </form>
                 <form action="/config" method="POST" name="debugDummyTimeNow">
-                    <input class="button-primary" type="submit" name="debugDummyTimeNow"
-                        value="Set time to NOW">
+                    <input class="button-primary" type="submit" name="debugDummyTimeNow" value="Set time to NOW">
                 </form>
                 </p>
                 <p>%ANY_DEBUGMESSAGE%</p>

@@ -2,6 +2,8 @@
 
 AsyncWebServer webServer(80);
 DNSServer dns;
+AsyncWiFiManager wifiManager(&webServer, &dns);
+
 
 //---------------------------------------------------------------------------------------
 // setupWifi
@@ -15,10 +17,8 @@ void setupWifi()
 {
     // WiFi Setup
     Serial.println("Setup Wifi: Initializing ...");
-    wifi_station_set_hostname(WIFI_WORDCLOCK_HOSTNAME);
-    AsyncWiFiManager wifiManager(&webServer, &dns);
-    // reset settings - for testing
-    // wifiManager.resetSettings();
+    wifi_station_set_hostname(Config.getHostname());
+
     wifiManager.setAPCallback(wifimanagerConfigModeCallback);
     wifiManager.setTimeout(60);
     if (!wifiManager.autoConnect("WordClock"))
@@ -33,11 +33,11 @@ void setupWifi()
     }
     Serial.println("Wifi: Connected successfully.");
     // MDNS Setup
-    WiFi.hostname(WIFI_WORDCLOCK_HOSTNAME);
-    if (MDNS.begin(WIFI_WORDCLOCK_HOSTNAME))
+    WiFi.hostname(Config.getHostname());
+    if (MDNS.begin(Config.getHostname()))
     {
         Serial.print("MDNS: MDNS responder started. Hostname -> ");
-        Serial.println(WIFI_WORDCLOCK_HOSTNAME);
+        Serial.println(Config.getHostname());
     }
 
     LED.updatesBlocked(false);
@@ -56,7 +56,6 @@ void setupWifi()
 //---------------------------------------------------------------------------------------
 void wifimanagerConfigModeCallback(AsyncWiFiManager *myWiFiManager)
 {
-    // show "wifimanager word (words.h)"
     LED.updatesBlocked(false);
     LED.blankscreen();
     LED.word2stripe(word_QUESTIONMARK, sizeof(word_QUESTIONMARK) / sizeof(int), CRGB::Yellow);
@@ -65,4 +64,10 @@ void wifimanagerConfigModeCallback(AsyncWiFiManager *myWiFiManager)
     Serial.println("Entered WIFIManager config mode");
     Serial.println(WiFi.softAPIP());
     Serial.println(myWiFiManager->getConfigPortalSSID());
+}
+
+void resetWifi() {
+    // reset settings - for testing
+    wifiManager.resetSettings();
+    ESP.reset();
 }
