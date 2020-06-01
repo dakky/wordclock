@@ -238,6 +238,7 @@ void ConfigClass::setLedBrightness(int brightness)
     {
         this->config->ledBrightness = brightness;
     }
+    debugD("brightness is set to: %i", brightness);
 }
 
 //---------------------------------------------------------------------------------------
@@ -374,6 +375,7 @@ void ConfigClass::setHeartbeat(bool enabled)
     // copy chararray into config struct
     this->config->heartbeatEnabled = enabled;
     Serial.printf("Heartbeat enabled: %d", this->config->heartbeatEnabled);
+    debugD("Heartbeat is set to: %s", this->config->heartbeatEnabled ? "true" : "false");
 }
 
 //---------------------------------------------------------------------------------------
@@ -400,8 +402,6 @@ void ConfigClass::setHostname(char* hostname, int bufsize)
     // copy chararray into config struct
     memcpy(this->config->hostname, hostname, bufsize);
     Serial.printf("Hostname is set to: %s", this->config->hostname);
-    delay(500);
-    ESP.reset();
 }
 
 //---------------------------------------------------------------------------------------
