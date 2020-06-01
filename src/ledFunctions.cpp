@@ -89,14 +89,40 @@ void LedFunctionsClass::word2stripe(const int word[], int len)
 {
     CRGB color;
 
+    // mode1: simple static color
     if (Config.getLedMode() == 1)
     {
         color = strtol(Config.getLedSimpleColor(), NULL, 0);
     }
+    // mode2: rainbowing color
     else if (Config.getLedMode() == 2)
     {
         color = ColorFromPalette(RainbowColors_p, this->paletteColorIndex);
-        if (millis() - this->lastAutoColorChange > 5000)
+        u_long milliseconds;
+
+        // chainging speed from config
+        switch (Config.getLedRainbowSpeed())
+        {
+        case 1:
+            // 2 steps / 256 colors * 100ms = complete cycle in **12 secs**
+            milliseconds = 100;
+            break;
+        case 2:
+            // 2 steps / 256 colors * 1000ms = complete cycle in **128 secs/~2mins**
+            milliseconds = 1000;
+            break;
+        case 3:
+            // 2 steps / 256 colors * 5000ms = complete cycle in **640 secs/~10mins**
+            milliseconds = 5000;
+            break;
+        case 4:
+            // 2 steps / 256 colors * 15000ms = complete cycle in **1920 secs/32min**
+            milliseconds = 15000;
+            break;
+        }
+
+
+        if (millis() - this->lastAutoColorChange > milliseconds)
         {
             // calculate index. it should bounce between 0 and 255
             if (this->paletteColorIndex >= 256)

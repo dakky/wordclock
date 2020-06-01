@@ -97,9 +97,10 @@ void ConfigClass::load()
         this->reset();
     }
 
-    // Copy values from the JsonDocument to the Config
+    // Copy values from the JsonDocument to the config object
     this->config->ledBrightness = doc["ledBrightness"];
     strlcpy(this->config->ledSimpleColor, doc["ledSimpleColor"], sizeof(this->config->ledSimpleColor));
+    this->config->ledRainbowSpeed = doc["ledRainbowSpeed"];
     this->config->ledMode = doc["ledMode"];
     this->config->heartbeatEnabled = doc["heartbeatEnabled"];
     this->config->dataPin = doc["dataPin"];
@@ -124,6 +125,7 @@ void ConfigClass::reset()
     Serial.println("Configuration: Resetting to default values.");
     this->config->ledBrightness = 153;       // middle of 0..254
     strlcpy(this->config->ledSimpleColor, "0x7FFF00", sizeof(this->config->ledSimpleColor)); //light green
+    this->config->ledRainbowSpeed = 3; // medium speed
     this->config->ledMode = 1; // simple color mode
     this->config->heartbeatEnabled = true;
     this->config->dataPin = 15; // D8 on Wemos Mini
@@ -164,6 +166,7 @@ void ConfigClass::save()
     // Set the values in the document
     doc["ledBrightness"] = this->config->ledBrightness;
     doc["ledSimpleColor"] = this->config->ledSimpleColor;
+    doc["ledRainbowSpeed"] = this->config->ledRainbowSpeed;
     doc["ledMode"] = this->config->ledMode;
     doc["heartbeatEnabled"] = this->config->heartbeatEnabled;
     doc["dataPin"] = this->config->dataPin;
@@ -275,18 +278,27 @@ byte ConfigClass::getLedMode()
 }
 
 //---------------------------------------------------------------------------------------
-// setLedBrightness
-//
-// sets the brightness in config struct
-// param1 (char): chararray containing the hexvalue of the color in format 0xFFFFFF
-// param2 (int): size of chararray (usally `sizeof(arr)`)
+// setLedMode
+// sets the color mode of the clock
+// param1 (byte): mode
+// Mode 1: simple color
+// Mode 2: rainbow changing colors
 //
 //---------------------------------------------------------------------------------------
 void ConfigClass::setLedMode(byte mode)
 {
-    this->config->ledMode = mode;
-    debugD("Led Mode is set to: %b", mode);
+    // validation: if invalid: default to 1
+    byte validModes[] = {1,2};
+    
+    for (int i=0; i<sizeof validModes/sizeof validModes[0]; i++) {
+        if (validModes[i] == mode) {
+            this->config->ledMode = mode;
+            debugD("Led Mode is set to: %u", mode);
+        }
+    }
+    // nothing wil happen if invalid mode is passed to method
 }
+
 //---------------------------------------------------------------------------------------
 // getNtpServername
 //
@@ -390,4 +402,33 @@ void ConfigClass::setHostname(char* hostname, int bufsize)
     Serial.printf("Hostname is set to: %s", this->config->hostname);
     delay(500);
     ESP.reset();
+}
+
+//---------------------------------------------------------------------------------------
+// getRainbowSpeed
+//
+// gets the RainbowSpeed from config struct
+//
+//---------------------------------------------------------------------------------------
+byte ConfigClass::getLedRainbowSpeed()
+{
+    return this->config->ledRainbowSpeed;
+}
+
+//---------------------------------------------------------------------------------------
+// setRainbowSpeed
+//
+// sets the brightness in config struct
+// param1 (char): chararray containing the hexvalue of the color in format 0xFFFFFF
+// param2 (int): size of chararray (usally `sizeof(arr)`)
+//
+//---------------------------------------------------------------------------------------
+void ConfigClass::setLedRainbowSpeed(byte speed)
+{
+    // validate input ;) 4 levels. cap if higher or lower
+    if (speed <= 1) speed = 1;
+    if (speed >= 4) speed = 4;
+
+    this->config->ledRainbowSpeed = speed;
+    debugD("Led rainbow Speed is set to: %u", speed);
 }

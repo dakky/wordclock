@@ -10,7 +10,7 @@
 </head>
 
 <body>
-    <h1>Wordclock Web Server</h1>
+    <h1>Wordclock Options</h1>
     <div class="container">
 
         <div class="row">
@@ -27,6 +27,9 @@
                     <label for="color">Color</label>
                     <input type="color" id="color" onchange="clickColor(0, -1, -1, 5)" value="%CLOCK_COLOR%"
                         name="color">
+                    <!-- LED rainbow speed -->
+                    <label for="rainbow_speed">Changing speed</label>
+                    <input type="range" id="rainbow_speed" name="rainbow_speed" min="1" max="4" step="1" value="%CLOCK_RAINBOW_SPEED%">
                     <!-- LED brightness -->
                     <label for="brightness">Brightness (current value: %CLOCK_BRIGHTNESS%)</label>
                     <input type="range" id="brightness" name="brightness" min="0" max="254" step=5
@@ -40,10 +43,6 @@
                     <!-- Submit -->
                     <input class="button-primary" type="submit" value="Send">
                 </form>
-                * mode
-                * single color
-                * colorselect
-                * rainbow
             </div>
             <div class="column">
                 <h3>NTP options</h3>
