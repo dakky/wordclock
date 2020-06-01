@@ -71,16 +71,20 @@ void setupWebserver()
         if (request->hasParam("color", true))
         {
             String color = request->getParam("color", true)->value().c_str();
-            color.replace("#","0x"); // make a "valid" HEX string
+            color.replace("#", "0x"); // make a "valid" HEX string
 
             int str_len = color.length() + 1;
             char buf[str_len];
-            color.toCharArray(buf,str_len);
+            color.toCharArray(buf, str_len);
             Config.setLedSimpleColor(buf, str_len);
         }
         if (request->hasParam("ledMode", true))
         {
             Config.setLedMode(request->getParam("ledMode", true)->value().toInt());
+        }
+        if (request->hasParam("rainbow_speed", true))
+        {
+            Config.setLedRainbowSpeed(request->getParam("rainbow_speed", true)->value().toInt());
         }
         if (request->hasParam("heartbeatEnabled", true))
         {
@@ -91,7 +95,7 @@ void setupWebserver()
             String hostname = request->getParam("hostname", true)->value().c_str();
             int str_len = hostname.length() + 1;
             char buf[str_len];
-            hostname.toCharArray(buf,str_len);
+            hostname.toCharArray(buf, str_len);
             Config.setHostname(buf, str_len);
         }
         if (request->hasParam("ntpServername", true))
@@ -99,7 +103,7 @@ void setupWebserver()
             String timezone = request->getParam("ntpServername", true)->value().c_str();
             int str_len = timezone.length() + 1;
             char buf[str_len];
-            timezone.toCharArray(buf,str_len);
+            timezone.toCharArray(buf, str_len);
             Config.setNtpServername(buf, str_len);
         }
         if (request->hasParam("ntpTimezone", true))
@@ -107,7 +111,7 @@ void setupWebserver()
             String timezone = request->getParam("ntpTimezone", true)->value().c_str();
             int str_len = timezone.length() + 1;
             char buf[str_len];
-            timezone.toCharArray(buf,str_len);
+            timezone.toCharArray(buf, str_len);
             Config.setNtpTimezone(buf, str_len);
         }
         if (request->hasParam("resetConfig", true))
@@ -120,7 +124,7 @@ void setupWebserver()
         }
         if (request->hasParam("debugDummyTime", true))
         {
-            WordclockTime.timeToStripe(23,12);
+            WordclockTime.timeToStripe(23, 12);
         }
         if (request->hasParam("debugDummyTimeNow", true))
         {
@@ -128,10 +132,8 @@ void setupWebserver()
         }
         // request->send(200, "text/plain", message);
         request->redirect("/");
-        Config.save();  
+        Config.save();
     });
-
-
 
     webServer.onNotFound(webserverNotFound);
     webServer.begin();
@@ -150,11 +152,15 @@ String webserverProcessHtmlTemplate(const String &var)
     {
         return String(Config.getLedBrightness());
     }
+    if (var == "CLOCK_RAINBOW_SPEED")
+    {
+        return String(Config.getLedRainbowSpeed());
+    }
     if (var == "CLOCK_COLOR")
     {
         // as the chararray comes in the form 0xFFFFFF we need to replace 0x with #
         String color = Config.getLedSimpleColor();
-        color.replace("0x","#");
+        color.replace("0x", "#");
         return color;
     }
     if (var == "NTP_SERVERNAME")
@@ -177,12 +183,12 @@ String webserverProcessHtmlTemplate(const String &var)
     {
         if (Config.getHeartbeat())
         {
-            return String("checked=checked");
-        } else
+            return String("checked");
+        }
+        else
         {
             return String("");
         }
-        
     }
     if (var == "HOSTNAME")
     {

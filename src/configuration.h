@@ -22,7 +22,8 @@
 typedef struct _config_struct
 {
     int  ledBrightness;
-    char  ledSimpleColor[9];
+    char ledSimpleColor[9];
+    byte ledRainbowSpeed;
     byte ledMode;
     bool heartbeatEnabled;
     int  dataPin;
@@ -41,20 +42,24 @@ public:
     void load();
     void reset();
     void print();
-    int getLedBrightness();
-    void setLedBrightness(int);
-    byte getLedMode();
-    void setLedMode(byte);
+
+    // setter and getter
+    int   getLedBrightness();
+    void  setLedBrightness(int);
+    byte  getLedMode();
+    void  setLedMode(byte);
     char* getLedSimpleColor();
-    void setLedSimpleColor(char*,int);
+    void  setLedSimpleColor(char*,int);
+    byte  getLedRainbowSpeed();
+    void  setLedRainbowSpeed(byte);
     char* getNtpServername();
-    void setNtpServername(char*,int);
+    void  setNtpServername(char*,int);
     char* getNtpTimezone();
-    void setNtpTimezone(char*,int);
-    bool getHeartbeat();
-    void setHeartbeat(bool);
+    void  setNtpTimezone(char*,int);
+    bool  getHeartbeat();
+    void  setHeartbeat(bool);
     char* getHostname();
-    void setHostname(char*,int);
+    void  setHostname(char*,int);
 
     // public config vars
     int dataPin;
