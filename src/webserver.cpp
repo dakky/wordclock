@@ -88,7 +88,11 @@ void setupWebserver()
         }
         if (request->hasParam("heartbeatEnabled", true))
         {
-            Config.setHeartbeat(request->getParam("heartbeatEnabled", true)->value());
+            Config.setHeartbeat(true);
+        }
+        else
+        {
+            Config.setHeartbeat(false);
         }
         if (request->hasParam("hostname", true))
         {
