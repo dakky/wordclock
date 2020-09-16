@@ -20,7 +20,7 @@
 #include "timeFunctions.h"
 #include "ledFunctions.h"
 #include "telnetDebugging.h"
-#include "words_layout2.h"
+#include "words_layout.h"
 
 //---------------------------------------------------------------------------------------
 // global instance

@@ -16,9 +16,13 @@ controlled by a NodeMCU (mini) with an ESP8266 Wifi module for configuration and
 * Webinterface for configuration of the wordclock
 
 
-#### Stripe layout
+#### Stripe layout /Configuration
 
-There are two different layouts for two kinds of wireing the stripes. In the layout header files X/Y coords are mapped to the index no. of each LED on the stripes.
+As there a multiple ways to wire the LEDs on the back of the clock and there are also multiple frontplates, there are two places where to configure the actual setup:
+  1. layout.h  
+     this file describes the wiring of the LED Strip. See explaination in file
+  1. words_layout.h  
+     this file describes the frontplate via simple x/y coordinates
 
 ##### Layout 1
 
@@ -165,9 +169,10 @@ Four more pixels shows additional minutes. In the original WordClock, they are i
 #### Usage/Setup
 
 1. have a look @ "config.h"
-1. search for string "SETUP:" in order to find the locations, where to setup the wiring and frontplate layout
+1. configure led wiring in "layout.h"
+1. configure frontplate in "words_layout.h"
 1. upload Code (first time via usb, later via OTA)
-1. upload spiffs data `pio run -t uploadfs`
+1. upload spiffs data (HTML code) `pio run -t uploadfs`
 
 #### BOM
 Article | Source | Price
