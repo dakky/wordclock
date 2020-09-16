@@ -16,9 +16,7 @@
 
 
 // project deps
-// SETUP: chose frontplate layout here:
-//#include "words_layout1.h"
-#include "words_layout2.h"
+#include "words_layout.h"
 
 #include "ledFunctions.h"
 #include "timeFunctions.h"
