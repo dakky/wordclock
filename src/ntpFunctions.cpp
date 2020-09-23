@@ -7,7 +7,7 @@ void setupNtpClock()
 {
     Serial.println("Setup NTPClock: Initializing ...");
 
-    debugI("Settings NTP server to: %s", Config.getNtpServername());
+    Serial.printf("Settings NTP server to: %s", Config.getNtpServername());
     setServer(Config.getNtpServername());
 
     int attemptCnt = 1;

@@ -25,7 +25,6 @@ typedef struct _config_struct
     char ledSimpleColor[9];
     byte ledRainbowSpeed;
     byte ledMode;
-    bool heartbeatEnabled;
     int  dataPin;
     char ntpServername[25];
     char ntpTimezone[25];
@@ -56,8 +55,6 @@ public:
     void  setNtpServername(char*,int);
     char* getNtpTimezone();
     void  setNtpTimezone(char*,int);
-    bool  getHeartbeat();
-    void  setHeartbeat(bool);
     char* getHostname();
     void  setHostname(char*,int);
 

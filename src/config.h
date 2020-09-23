@@ -8,8 +8,6 @@
 
 #define FRAMES_PER_SECOND 20
 
-#define HEARTBEAT_PIN 2
-
 #define WIFI_WORDCLOCK_HOSTNAME "wordclock"
 
 // time window in microseconds for OTA before actual clocklogic is starting

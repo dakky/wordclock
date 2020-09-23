@@ -15,7 +15,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "ledFunctions.h"
-#include "telnetDebugging.h"
 
 //---------------------------------------------------------------------------------------
 // global instance
@@ -246,8 +245,8 @@ void LedFunctionsClass::printDebugArray()
             debugString2.concat(0);
         }
     }
-    debugD("TARGET array: %s", debugString1.c_str());
-    debugD("LIVE array:   %s", debugString2.c_str());
+    Serial.printf("TARGET array: %s", debugString1.c_str());
+    Serial.printf("LIVE array:   %s", debugString2.c_str());
 }
 
 bool LedFunctionsClass::updatesBlocked()

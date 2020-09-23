@@ -21,7 +21,6 @@
 #include <ArduinoJson.h>
 #include <FS.h>
 #include "configuration.h"
-#include "telnetDebugging.h"
 
 //---------------------------------------------------------------------------------------
 // global instance
@@ -102,7 +101,6 @@ void ConfigClass::load()
     strlcpy(this->config->ledSimpleColor, doc["ledSimpleColor"], sizeof(this->config->ledSimpleColor));
     this->config->ledRainbowSpeed = doc["ledRainbowSpeed"];
     this->config->ledMode = doc["ledMode"];
-    this->config->heartbeatEnabled = doc["heartbeatEnabled"];
     this->config->dataPin = doc["dataPin"];
     strlcpy(this->config->ntpServername, doc["ntpServername"], sizeof(this->config->ntpServername));
     strlcpy(this->config->ntpTimezone, doc["ntpTimezone"], sizeof(this->config->ntpTimezone));
@@ -127,7 +125,6 @@ void ConfigClass::reset()
     strlcpy(this->config->ledSimpleColor, "0x7FFF00", sizeof(this->config->ledSimpleColor)); //light green
     this->config->ledRainbowSpeed = 3; // medium speed
     this->config->ledMode = 1; // simple color mode
-    this->config->heartbeatEnabled = true;
     this->config->dataPin = 15; // D8 on Wemos Mini
     strlcpy(this->config->ntpServername, "europe.pool.ntp.org", sizeof(this->config->ntpServername));
     strlcpy(this->config->ntpTimezone, "Europe/Berlin", sizeof(this->config->ntpTimezone));
@@ -168,7 +165,6 @@ void ConfigClass::save()
     doc["ledSimpleColor"] = this->config->ledSimpleColor;
     doc["ledRainbowSpeed"] = this->config->ledRainbowSpeed;
     doc["ledMode"] = this->config->ledMode;
-    doc["heartbeatEnabled"] = this->config->heartbeatEnabled;
     doc["dataPin"] = this->config->dataPin;
     doc["ntpServername"] = this->config->ntpServername;
     doc["ntpTimezone"] = this->config->ntpTimezone;
@@ -238,7 +234,7 @@ void ConfigClass::setLedBrightness(int brightness)
     {
         this->config->ledBrightness = brightness;
     }
-    debugD("brightness is set to: %i", brightness);
+    Serial.printf("brightness is set to: %i", brightness);
 }
 
 //---------------------------------------------------------------------------------------
@@ -264,7 +260,7 @@ void ConfigClass::setLedSimpleColor(char* color, int bufsize)
 {
     // copy chararray into config struct
     memcpy(this->config->ledSimpleColor, color, bufsize);
-    debugD("color is set to: %s", color);
+    Serial.printf("color is set to: %s", color);
 }
 
 //---------------------------------------------------------------------------------------
@@ -294,7 +290,7 @@ void ConfigClass::setLedMode(byte mode)
     for (int i=0; i<sizeof validModes/sizeof validModes[0]; i++) {
         if (validModes[i] == mode) {
             this->config->ledMode = mode;
-            debugD("Led Mode is set to: %u", mode);
+            Serial.printf("Led Mode is set to: %u", mode);
         }
     }
     // nothing wil happen if invalid mode is passed to method
@@ -353,32 +349,6 @@ void ConfigClass::setNtpTimezone(char* timezone, int bufsize)
 }
 
 //---------------------------------------------------------------------------------------
-// geatHeartbeat
-//
-// gets the heartbeatsetting from config struct
-//
-//---------------------------------------------------------------------------------------
-bool ConfigClass::getHeartbeat()
-{
-    return this->config->heartbeatEnabled;
-}
-
-//---------------------------------------------------------------------------------------
-// setHeartbeat
-//
-// sets the heartbeat in config struct
-// param1 (bool): heartbeat enabled: true/false
-//
-//---------------------------------------------------------------------------------------
-void ConfigClass::setHeartbeat(bool enabled)
-{
-    // copy chararray into config struct
-    this->config->heartbeatEnabled = enabled;
-    Serial.printf("Heartbeat enabled: %d", this->config->heartbeatEnabled);
-    debugD("Heartbeat is set to: %s", this->config->heartbeatEnabled ? "true" : "false");
-}
-
-//---------------------------------------------------------------------------------------
 // getHostname
 //
 // gets the hostname from config struct
@@ -430,5 +400,5 @@ void ConfigClass::setLedRainbowSpeed(byte speed)
     if (speed >= 4) speed = 4;
 
     this->config->ledRainbowSpeed = speed;
-    debugD("Led rainbow Speed is set to: %u", speed);
+    Serial.printf("Led rainbow Speed is set to: %u", speed);
 }

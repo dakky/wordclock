@@ -75,17 +75,17 @@ void otaStartDelay()
     // the firmware hangs afterwards
     if (updateCountdown)
     {
-        debugI("Delaying startup of wordclock for %i ms", OTA_STARTUP_DELAY);
+        Serial.printf("Delaying startup of wordclock for %i ms", OTA_STARTUP_DELAY);
         LED.blankscreen();
         LED.word2stripe(word_HOURGLASS, sizeof(word_HOURGLASS) / sizeof(int), CRGB::Green);
         Serial.print(".");
         delay(100);
         updateCountdown--;
-        debugD("Delay left: %i", OTA_STARTUP_DELAY);
+        Serial.printf("Delay left: %i", OTA_STARTUP_DELAY);
         if (updateCountdown == 0)
         {
             // wenn das startdelay fuer OTA vorbei ist, einfach weiter im text
-            debugI("Startup delay has passed. Resuming normal operations");
+            Serial.printf("Startup delay has passed. Resuming normal operations");
             LED.blankscreen();
         }
         return;

@@ -22,7 +22,7 @@ void setupWebserver()
     // register routes
     // index.html
     webServer.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
-        debugD("webserver: / GET request hit me.");
+        Serial.printf("webserver: / GET request hit me.");
         request->send(SPIFFS, "/index.html", String(), false, webserverProcessHtmlTemplate);
     });
 
@@ -35,32 +35,32 @@ void setupWebserver()
 
     // config.json
     webServer.on("/config.json", HTTP_GET, [](AsyncWebServerRequest *request) {
-        debugD("webserver: /config GET request hit me.");
+        Serial.printf("webserver: /config GET request hit me.");
         request->send(SPIFFS, "/config.json", "text/plain");
     });
 
     // configurations data of th wordclock/LEDs (POST)
     webServer.on("/config", HTTP_POST, [](AsyncWebServerRequest *request) {
-        debugD("webserver: /config POST request hit me.");
+        Serial.printf("webserver: /config POST request hit me.");
         // parse parameter
         String message = "Changed configuration:\n";
         int params = request->params();
-        debugD("webserver: %d params sent in", params);
+        Serial.printf("webserver: %d params sent in", params);
         for (int i = 0; i < params; i++)
         {
             AsyncWebParameter *p = request->getParam(i);
             if (p->isFile())
             {
-                debugD("_FILE[%s]: %s, size: %u", p->name().c_str(), p->value().c_str(), p->size());
+                Serial.printf("_FILE[%s]: %s, size: %u", p->name().c_str(), p->value().c_str(), p->size());
             }
             else if (p->isPost())
             {
                 // handling of post params
-                debugD("_POST[%s]: %s", p->name().c_str(), p->value().c_str());
+                Serial.printf("_POST[%s]: %s", p->name().c_str(), p->value().c_str());
             }
             else
             {
-                debugD("_GET[%s]: %s", p->name().c_str(), p->value().c_str());
+                Serial.printf("_GET[%s]: %s", p->name().c_str(), p->value().c_str());
             }
         }
 
@@ -85,14 +85,6 @@ void setupWebserver()
         if (request->hasParam("rainbow_speed", true))
         {
             Config.setLedRainbowSpeed(request->getParam("rainbow_speed", true)->value().toInt());
-        }
-        if (request->hasParam("heartbeatEnabled", true))
-        {
-            Config.setHeartbeat(true);
-        }
-        else
-        {
-            Config.setHeartbeat(false);
         }
         if (request->hasParam("hostname", true))
         {
@@ -183,17 +175,6 @@ String webserverProcessHtmlTemplate(const String &var)
     {
         return String(timeStatus());
     }
-    if (var == "CLOCK_HEARTBEATENABLED")
-    {
-        if (Config.getHeartbeat())
-        {
-            return String("checked");
-        }
-        else
-        {
-            return String("");
-        }
-    }
     if (var == "HOSTNAME")
     {
         return String(Config.getHostname());
@@ -201,7 +182,7 @@ String webserverProcessHtmlTemplate(const String &var)
     // for any message i need to debug without serial connected
     if (var == "ANY_DEBUGMESSAGE")
     {
-        return String("Anymessage: " + Config.getHeartbeat());
+        return String("Anymessage: ");
     }
     return String();
 }

@@ -19,7 +19,6 @@
 
 #include "timeFunctions.h"
 #include "ledFunctions.h"
-#include "telnetDebugging.h"
 #include "words_layout.h"
 
 //---------------------------------------------------------------------------------------

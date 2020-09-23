@@ -11,7 +11,6 @@
 #include <WiFiUdp.h>
 #include <DNSServer.h>
 #include <ezTime.h>
-#include <RemoteDebug.h>
 #include <ArduinoOTA.h>
 
 
@@ -22,13 +21,10 @@
 #include "timeFunctions.h"
 #include "ntpFunctions.h"
 #include "wifiFunctions.h"
-#include "heartbeat.h"
-#include "telnetDebugging.h"
 #include "otaFunctions.h"
 #include "webserver.h"
 
 
-extern RemoteDebug Debug;
 extern int updateCountdown;
 extern Timezone clockTimezoned;
 extern AsyncWebServer webServer;
