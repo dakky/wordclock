@@ -23,6 +23,7 @@ void setupWebserver()
     // index.html
     webServer.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
         Serial.printf("webserver: / GET request hit me.");
+        debugD("webserver: / GET request hit me.");
         request->send(SPIFFS, "/index.html", String(), false, webserverProcessHtmlTemplate);
     });
 
@@ -51,16 +52,16 @@ void setupWebserver()
             AsyncWebParameter *p = request->getParam(i);
             if (p->isFile())
             {
-                Serial.printf("_FILE[%s]: %s, size: %u", p->name().c_str(), p->value().c_str(), p->size());
+                Serial.printf("webserver: _FILE[%s]: %s, size: %u", p->name().c_str(), p->value().c_str(), p->size());
             }
             else if (p->isPost())
             {
                 // handling of post params
-                Serial.printf("_POST[%s]: %s", p->name().c_str(), p->value().c_str());
+                Serial.printf("webserver: _POST[%s]: %s", p->name().c_str(), p->value().c_str());
             }
             else
             {
-                Serial.printf("_GET[%s]: %s", p->name().c_str(), p->value().c_str());
+                Serial.printf("webserver: _GET[%s]: %s", p->name().c_str(), p->value().c_str());
             }
         }
 

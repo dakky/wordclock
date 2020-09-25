@@ -166,7 +166,7 @@ Four more pixels shows additional minutes. In the original WordClock, they are i
 
 #### Usage/Setup
 
-1. have a look @ "config.h"
+1. have a look @ "userconfig.h"
 1. configure led wiring in "layout.h"
 1. configure frontplate in "words_layout.h"
 1. upload Code (first time via usb, later via OTA)

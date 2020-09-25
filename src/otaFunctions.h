@@ -1,7 +1,7 @@
 #ifndef OTAFUNCTIONS_H_
 #define OTAFUNCTIONS_H_
 
-#include "config.h"
+#include "userconfig.h"
 
 void setupOTA();
 void otaStartDelay();

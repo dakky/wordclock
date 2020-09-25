@@ -18,6 +18,10 @@
 #ifndef _CONFIGURATION_H_
 #define _CONFIGURATION_H_
 
+#include <ArduinoJson.h>
+#include <FS.h>
+#include "userconfig.h"
+
 // Oject keeping the configuration
 typedef struct _config_struct
 {

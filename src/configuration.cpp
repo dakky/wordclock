@@ -18,8 +18,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include <ArduinoJson.h>
-#include <FS.h>
 #include "configuration.h"
 
 //---------------------------------------------------------------------------------------
@@ -35,7 +33,6 @@ ConfigClass Config = ConfigClass();
 //---------------------------------------------------------------------------------------
 ConfigClass::ConfigClass()
 {
-    // this->reset(); //???? why the fuck?
 }
 
 //---------------------------------------------------------------------------------------
@@ -234,7 +231,8 @@ void ConfigClass::setLedBrightness(int brightness)
     {
         this->config->ledBrightness = brightness;
     }
-    Serial.printf("brightness is set to: %i", brightness);
+    Serial.printf("ConfigClass: brightness is set to: %i", brightness);
+    debugI("ConfigClass: brightness is set to: %i", brightness);
 }
 
 //---------------------------------------------------------------------------------------
@@ -260,7 +258,8 @@ void ConfigClass::setLedSimpleColor(char* color, int bufsize)
 {
     // copy chararray into config struct
     memcpy(this->config->ledSimpleColor, color, bufsize);
-    Serial.printf("color is set to: %s", color);
+    Serial.printf("ConfigClass: color is set to: %s", color);
+    debugI("ConfigClass: color is set to: %s", color);
 }
 
 //---------------------------------------------------------------------------------------
@@ -290,7 +289,8 @@ void ConfigClass::setLedMode(byte mode)
     for (int i=0; i<sizeof validModes/sizeof validModes[0]; i++) {
         if (validModes[i] == mode) {
             this->config->ledMode = mode;
-            Serial.printf("Led Mode is set to: %u", mode);
+            Serial.printf("ConfigClass: Led Mode is set to: %u", mode);
+            debugI("ConfigClass: Led Mode is set to: %u", mode);
         }
     }
     // nothing wil happen if invalid mode is passed to method
@@ -319,7 +319,8 @@ void ConfigClass::setNtpServername(char* servername, int bufsize)
 {
     // copy chararray into config struct
     memcpy(this->config->ntpServername, servername, bufsize);
-    Serial.printf("NTP Server is set to: %s", this->config->ntpServername);
+    Serial.printf("ConfigClass: NTP Server is set to: %s", this->config->ntpServername);
+    debugI("ConfigClass: NTP Server is set to: %s", this->config->ntpServername);
 }
 
 //---------------------------------------------------------------------------------------
@@ -345,7 +346,8 @@ void ConfigClass::setNtpTimezone(char* timezone, int bufsize)
 {
     // copy chararray into config struct
     memcpy(this->config->ntpTimezone, timezone, bufsize);
-    Serial.printf("NTP Timezone is set to: %s", this->config->ntpTimezone);
+    Serial.printf("ConfigClass: NTP Timezone is set to: %s", this->config->ntpTimezone);
+    debugI("ConfigClass: NTP Timezone is set to: %s", this->config->ntpTimezone);
 }
 
 //---------------------------------------------------------------------------------------
@@ -371,7 +373,8 @@ void ConfigClass::setHostname(char* hostname, int bufsize)
 {
     // copy chararray into config struct
     memcpy(this->config->hostname, hostname, bufsize);
-    Serial.printf("Hostname is set to: %s", this->config->hostname);
+    Serial.printf("ConfigClass: Hostname is set to: %s", this->config->hostname);
+    debugI("ConfigClass: Hostname is set to: %s", this->config->hostname);
 }
 
 //---------------------------------------------------------------------------------------
@@ -400,5 +403,6 @@ void ConfigClass::setLedRainbowSpeed(byte speed)
     if (speed >= 4) speed = 4;
 
     this->config->ledRainbowSpeed = speed;
-    Serial.printf("Led rainbow Speed is set to: %u", speed);
+    Serial.printf("ConfigClass: Led rainbow Speed is set to: %u", speed);
+    debugI("ConfigClass: Led rainbow Speed is set to: %u", speed);
 }

@@ -245,8 +245,10 @@ void LedFunctionsClass::printDebugArray()
             debugString2.concat(0);
         }
     }
-    Serial.printf("TARGET array: %s", debugString1.c_str());
-    Serial.printf("LIVE array:   %s", debugString2.c_str());
+    Serial.printf("LedFunctionsClass [DEBUG]: TARGET array: %s", debugString1.c_str());
+    Serial.printf("LedFunctionsClass [DEBUG]: LIVE array:   %s", debugString2.c_str());
+    debugD("LedFunctionsClass [DEBUG]: TARGET array: %s", debugString1.c_str());
+    debugD("LedFunctionsClass [DEBUG]: LIVE array:   %s", debugString2.c_str());
 }
 
 bool LedFunctionsClass::updatesBlocked()
