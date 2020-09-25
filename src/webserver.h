@@ -1,7 +1,7 @@
 #ifndef _WEBSERVER_H_
 #define _WEBSERVER_H_
 
-#include "config.h"
+#include "userconfig.h"
 
 void setupWebserver();
 String webserverProcessHtmlTemplate(const String& var);

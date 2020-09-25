@@ -4,7 +4,7 @@
 // no idea, why this cant be moved to globals.h :shrug:
 #include <TaskScheduler.h>
 #include <FastLED.h>
-#include "config.h"
+#include "userconfig.h"
 #include "configuration.h"
 #include "timeFunctions.h"
 
@@ -20,6 +20,7 @@ void setup()
 
     Config.begin();
     setupWifi();
+    setupTelnetDebugging();
     LED.begin();
     setupOTA();
     setupNtpClock();
@@ -33,7 +34,7 @@ void loop()
     if (isOtaInProgress()) // if ota is in progress, skip the rest
         return;
     // otaStartDelay();
-
+    Debug.handle();
     events();         // from ezTime.h: gets ntp time if nessesary
     WordclockTime.timeToStripe(); // update LEDs on the target array to be lighted up
     LED.fadeTargetToLive(25); // has to be done here, if called in i.e. timeToStripe it takes to long and the esp crashes

@@ -18,7 +18,7 @@
 
 #include <FastLED.h>
 #include "configuration.h"
-#include "config.h"
+#include "userconfig.h"
 
 #define NUM_LEDS 114
 
