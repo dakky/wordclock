@@ -90,7 +90,7 @@ Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
 #define X5Y4    37
 #define X6Y4    38
 #define X7Y4    39
-#define X8Y4    30
+#define X8Y4    40
 #define X9Y4    41
 #define X10Y4   42
 #define X11Y4   43

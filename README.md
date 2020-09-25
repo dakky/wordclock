@@ -9,10 +9,8 @@ controlled by a NodeMCU (mini) with an ESP8266 Wifi module for configuration and
 ## Features
 * NTP 
 * WIFIManager
-* non-blocking schedules
-* telnet remote debugging
 * OTA
-* easy to customzize to different front plates
+* easy to customzize to different front plates & LED wirings
 * Webinterface for configuration of the wordclock
 
 
