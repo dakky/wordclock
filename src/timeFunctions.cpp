@@ -18,8 +18,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "timeFunctions.h"
-#include "ledFunctions.h"
-#include "words_layout.h"
 
 //---------------------------------------------------------------------------------------
 // global instance
@@ -45,7 +43,6 @@ TimefunctionsClass::TimefunctionsClass()
 TimefunctionsClass::~TimefunctionsClass()
 {
 }
-
 
 //---------------------------------------------------------------------------------------
 // timeToStripe
@@ -212,4 +209,66 @@ void TimefunctionsClass::timeToStripe(uint8_t hours, uint8_t minutes)
     {
         LED.word2stripe(word_UHR, sizeof(word_UHR) / sizeof(int));
     }
+}
+
+//---------------------------------------------------------------------------------------
+// isInSleeptime
+//
+// reports, if recent time is in sleepintervall
+// TODO: maybe add timer/coutner, that this whole thing is only calculated each second and not every loop
+//
+//---------------------------------------------------------------------------------------
+bool TimefunctionsClass::isInSleeptime(){
+    uint8_t hours = clockTimezoned.hour();
+    uint8_t minutes = clockTimezoned.minute();
+
+    return this->isInSleeptime(hours, minutes);
+}
+
+bool TimefunctionsClass::isInSleeptime(uint8_t hours, uint8_t minutes)
+{
+    char* startSleeptime = Config.getStartSleeptime();
+
+    char bufferStartHour[2] = { startSleeptime[0], startSleeptime[1] };
+    char bufferStartMinute[2] = { startSleeptime[3], startSleeptime[4] };
+
+    int startHour = atoi(bufferStartHour);
+    int startMinute = atoi(bufferStartMinute);
+
+    char* endSleeptime = Config.getStartSleeptime();
+
+    char bufferEndHour[2] = { endSleeptime[0], endSleeptime[1] };
+    char bufferEndMinute[2] = { endSleeptime[3], endSleeptime[4] };
+
+    int endHour = atoi(bufferEndHour);
+    int endMinute = atoi(bufferEndMinute);
+
+    // over midnight
+    if (startHour > endHour) {
+        // // hours between startHour and midnight, no need to check minutes
+        if (hours > startHour && hours < 23 && hours != endHour) { return true; }
+        // hour after midnight and before endHour
+        if (hours < endHour && hours != endHour) { return true; } 
+        // hour equals start => checking minutes
+        if (hours == startHour) 
+        {
+            if (minutes > startMinute) { return true; }
+        }
+        // hour equals end => checking minutes
+        if (hours == endHour) 
+        {
+            if (minutes < endMinute) { return true; }
+        }
+    }
+    else
+    {
+        // hours between startHour and endHour, no need to check minutes
+        if (hours > startHour && hours < endHour) { return true; }
+        // hour matches startingHour, check minutes
+        if (hours == startHour && minutes > startMinute) {return true; }
+        // hour matches endHour, check minutes again the other way around
+        if (hours == endHour && minutes < endMinute) { return true; }
+    }
+    
+    return false;
 }

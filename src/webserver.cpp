@@ -40,7 +40,7 @@ void setupWebserver()
         request->send(SPIFFS, "/config.json", "text/plain");
     });
 
-    // configurations data of th wordclock/LEDs (POST)
+    // configurations data of the wordclock/LEDs (POST)
     webServer.on("/config", HTTP_POST, [](AsyncWebServerRequest *request) {
         Serial.printf("webserver: /config POST request hit me.");
         // parse parameter
@@ -94,6 +94,22 @@ void setupWebserver()
             char buf[str_len];
             hostname.toCharArray(buf, str_len);
             Config.setHostname(buf, str_len);
+        }
+        if (request->hasParam("start_sleeptime", true))
+        {
+            String start_sleeptime = request->getParam("start_sleeptime", true)->value().c_str();
+            int str_len = start_sleeptime.length() + 1;
+            char buf[str_len];
+            start_sleeptime.toCharArray(buf, str_len);
+            Config.setStartSleeptime(buf, str_len);
+        }
+        if (request->hasParam("end_sleeptime", true))
+        {
+            String end_sleeptime = request->getParam("end_sleeptime", true)->value().c_str();
+            int str_len = end_sleeptime.length() + 1;
+            char buf[str_len];
+            end_sleeptime.toCharArray(buf, str_len);
+            Config.setEndSleeptime(buf, str_len);
         }
         if (request->hasParam("ntpServername", true))
         {
@@ -159,6 +175,14 @@ String webserverProcessHtmlTemplate(const String &var)
         String color = Config.getLedSimpleColor();
         color.replace("0x", "#");
         return color;
+    }
+    if (var == "CLOCK_START_SLEEPTIME")
+    {
+        return String(Config.getStartSleeptime());
+    }
+    if (var == "CLOCK_END_SLEEPTIME")
+    {
+        return String(Config.getEndSleeptime());
     }
     if (var == "NTP_SERVERNAME")
     {

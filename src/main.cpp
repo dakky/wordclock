@@ -10,6 +10,8 @@
 
 #define FRAMES_PER_SECOND 20
 
+long timercounter=0;
+
 void setup()
 {
     // serial port
@@ -25,6 +27,7 @@ void setup()
     setupOTA();
     setupNtpClock();
     setupWebserver();
+    
     Serial.println("Setup done.");
 }
 
@@ -39,4 +42,9 @@ void loop()
     WordclockTime.timeToStripe(); // update LEDs on the target array to be lighted up
     LED.fadeTargetToLive(25); // has to be done here, if called in i.e. timeToStripe it takes to long and the esp crashes
     FastLED.delay(1000 / FRAMES_PER_SECOND);
+    if (millis() - timercounter > 1000) {
+        bool result=WordclockTime.isInSleeptime();
+        debugI("checked sleep, result is %d", result);
+        timercounter=millis();
+    }
 }

@@ -13,6 +13,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #ifndef _LEDFUNCTION_H_
 #define _LEDFUNCTION_H_
 
@@ -41,7 +42,6 @@ class LedFunctionsClass {
 
         CRGB leds_live[NUM_LEDS];
         CRGB leds_target[NUM_LEDS];
-        int dataPin;
         long currentSimpleColor;
         bool blockUpdates = false;
         long lastAutoColorChange = 0;
@@ -50,13 +50,5 @@ class LedFunctionsClass {
 };
 
 extern LedFunctionsClass LED;
-
-// push word to leds array
-// void word2stripe(const int[],int, CRGB color = CRGB::DeepPink);
-// switching all led off
-// void blankscreen(CRGB color, bool commit);
-
-//void setupLeds();
-//void setBrightness();
 
 #endif

@@ -20,6 +20,10 @@
 #define _TIMEFUNCTIONS_H_
 
 #include <Arduino.h>
+#include "userconfig.h"
+#include "ledFunctions.h"
+#include "words_layout.h"
+
 class TimefunctionsClass
 {
     public:
@@ -27,6 +31,8 @@ class TimefunctionsClass
         ~TimefunctionsClass();
         void timeToStripe();
         void timeToStripe(uint8_t, uint8_t);
+        bool isInSleeptime();
+        bool isInSleeptime(uint8_t, uint8_t);
 };
 
 extern TimefunctionsClass WordclockTime;

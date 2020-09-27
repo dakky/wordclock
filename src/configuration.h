@@ -15,6 +15,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #ifndef _CONFIGURATION_H_
 #define _CONFIGURATION_H_
 
@@ -29,10 +30,11 @@ typedef struct _config_struct
     char ledSimpleColor[9];
     byte ledRainbowSpeed;
     byte ledMode;
-    int  dataPin;
     char ntpServername[25];
     char ntpTimezone[25];
     char hostname[25];
+    char startSleeptime[5];
+    char endSleeptime[5];
 } config_struct;
 
 class ConfigClass
@@ -61,11 +63,14 @@ public:
     void  setNtpTimezone(char*,int);
     char* getHostname();
     void  setHostname(char*,int);
-
-    // public config vars
-    int dataPin;
+    char* getStartSleeptime();
+    void  setStartSleeptime(char*,int);
+    char* getEndSleeptime();
+    void  setEndSleeptime(char*,int);
 
 private:
+    void resetAndRestart();
+
     // copy of config.json content
     config_struct *config = new config_struct();
     const char *filename = "/config.json";

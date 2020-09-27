@@ -91,22 +91,63 @@ void ConfigClass::load()
     {
         Serial.println("Configuration: Failed to read file, using default configuration");
         this->reset();
+        this->save();
+    }
+    else
+    {
+        Serial.println("Configuration: Loaded file sucessfully.");
     }
 
-    // Copy values from the JsonDocument to the config object
-    this->config->ledBrightness = doc["ledBrightness"];
-    strlcpy(this->config->ledSimpleColor, doc["ledSimpleColor"], sizeof(this->config->ledSimpleColor));
-    this->config->ledRainbowSpeed = doc["ledRainbowSpeed"];
-    this->config->ledMode = doc["ledMode"];
-    this->config->dataPin = doc["dataPin"];
-    strlcpy(this->config->ntpServername, doc["ntpServername"], sizeof(this->config->ntpServername));
-    strlcpy(this->config->ntpTimezone, doc["ntpTimezone"], sizeof(this->config->ntpTimezone));
-    strlcpy(this->config->hostname, doc["hostname"], sizeof(this->config->hostname));
+    // Test if key exists in json, 
+    // if yes: Copy values from the JsonDocument to the config object
+    // if no: set bolean for restarting the esp after resetting to default values
+    if (doc["ledBrightness"]) {
+        this->config->ledBrightness = doc["ledBrightness"];
+    } else {
+        this->resetAndRestart();
+    }
+    if (doc["ledSimpleColor"]) {
+        strlcpy(this->config->ledSimpleColor, doc["ledSimpleColor"], sizeof(this->config->ledSimpleColor));
+    } else {
+        this->resetAndRestart();
+    }
+    if (doc["ledRainbowSpeed"]) {
+            this->config->ledRainbowSpeed = doc["ledRainbowSpeed"];
+    } else {
+        this->resetAndRestart();
+    }
+    if (doc["ledMode"]) {
+        this->config->ledMode = doc["ledMode"];
+    } else {
+        this->resetAndRestart();
+    }
+    if (doc["ntpServername"]) {
+        strlcpy(this->config->ntpServername, doc["ntpServername"], sizeof(this->config->ntpServername));
+    } else {
+        this->resetAndRestart();
+    }
+    if (doc["ntpTimezone"]) {
+        strlcpy(this->config->ntpTimezone, doc["ntpTimezone"], sizeof(this->config->ntpTimezone));
+    } else {
+        this->resetAndRestart();
+    }
+    if (doc["hostname"]) {
+        strlcpy(this->config->hostname, doc["hostname"], sizeof(this->config->hostname));
+    } else {
+        this->resetAndRestart();
+    }
+    if (doc["startSleeptime"]) {
+        strlcpy(this->config->startSleeptime, doc["startSleeptime"], sizeof(this->config->startSleeptime));
+    } else {
+        this->resetAndRestart();
+    }
+    if (doc["endSleeptime"]) {
+        strlcpy(this->config->endSleeptime, doc["endSleeptime"], sizeof(this->config->endSleeptime));
+    } else {
+        this->resetAndRestart();
+    }
 
     file.close();
-
-    // now load the config struct members into the public class members
-    this->dataPin = this->config->dataPin;
 }
 
 //---------------------------------------------------------------------------------------
@@ -118,18 +159,22 @@ void ConfigClass::load()
 void ConfigClass::reset()
 {
     Serial.println("Configuration: Resetting to default values.");
+    debugI("Configuration: Resetting to default values.");
+
     this->config->ledBrightness = 153;       // middle of 0..254
     strlcpy(this->config->ledSimpleColor, "0x7FFF00", sizeof(this->config->ledSimpleColor)); //light green
     this->config->ledRainbowSpeed = 3; // medium speed
     this->config->ledMode = 1; // simple color mode
-    this->config->dataPin = 15; // D8 on Wemos Mini
     strlcpy(this->config->ntpServername, "europe.pool.ntp.org", sizeof(this->config->ntpServername));
     strlcpy(this->config->ntpTimezone, "Europe/Berlin", sizeof(this->config->ntpTimezone));
     strlcpy(this->config->hostname, "wordclock", sizeof(this->config->hostname));
+    strlcpy(this->config->startSleeptime, "22:00", sizeof(this->config->startSleeptime));
+    strlcpy(this->config->endSleeptime, "05:00", sizeof(this->config->endSleeptime));
 
     this->save();
 
     Serial.println("Configuration: Reset Done");
+    debugI("Configuration: Reset Done");
 }
 
 //---------------------------------------------------------------------------------------
@@ -148,10 +193,6 @@ void ConfigClass::save()
         return;
     }
 
-    // writing public class members to config struct
-    // now load the config struct members into the public class members
-    this->config->dataPin = this->dataPin;
-
     // Allocate a temporary JsonDocument
     // Don't forget to change the capacity to match your requirements.
     // Use arduinojson.org/assistant to compute the capacity.
@@ -162,10 +203,11 @@ void ConfigClass::save()
     doc["ledSimpleColor"] = this->config->ledSimpleColor;
     doc["ledRainbowSpeed"] = this->config->ledRainbowSpeed;
     doc["ledMode"] = this->config->ledMode;
-    doc["dataPin"] = this->config->dataPin;
     doc["ntpServername"] = this->config->ntpServername;
     doc["ntpTimezone"] = this->config->ntpTimezone;
     doc["hostname"] = this->config->hostname;
+    doc["startSleeptime"] = this->config->startSleeptime;
+    doc["endSleeptime"] = this->config->endSleeptime;
 
     // Serialize JSON to file
     if (serializeJson(doc, file) == 0)
@@ -185,6 +227,7 @@ void ConfigClass::print()
     if (!file)
     {
         Serial.println(F("Failed to read file"));
+        debugE("Failed to read file");
         return;
     }
 
@@ -197,6 +240,17 @@ void ConfigClass::print()
 
     // Close the file
     file.close();
+}
+
+
+//---------------------------------------------------------------------------------------
+// helper for resetting and restarting die esp module
+//---------------------------------------------------------------------------------------
+void ConfigClass::resetAndRestart()
+{
+    this->reset();
+    this->save();
+    ESP.restart();
 }
 
 //---------------------------------------------------------------------------------------
@@ -405,4 +459,60 @@ void ConfigClass::setLedRainbowSpeed(byte speed)
     this->config->ledRainbowSpeed = speed;
     Serial.printf("ConfigClass: Led rainbow Speed is set to: %u", speed);
     debugI("ConfigClass: Led rainbow Speed is set to: %u", speed);
+}
+
+//---------------------------------------------------------------------------------------
+// getStartSleeptime
+//
+// gets the time, when the clock should start the sleepmode
+// Format: xx:xx (chararray)
+//
+//---------------------------------------------------------------------------------------
+char* ConfigClass::getStartSleeptime()
+{
+    return this->config->startSleeptime;
+}
+
+//---------------------------------------------------------------------------------------
+// setStartSleeptime
+//
+// sets the time when the clock should start  the sleepmode 
+// param1 (char): chararray containing the timw
+// param2 (int): size of chararray (usally `sizeof(arr)`)
+//
+//---------------------------------------------------------------------------------------
+void ConfigClass::setStartSleeptime(char* startSleeptime, int bufsize)
+{
+    // copy chararray into config struct
+    memcpy(this->config->startSleeptime, startSleeptime, bufsize);
+    Serial.printf("ConfigClass: startSleeptime is set to: %s", this->config->startSleeptime);
+    debugI("ConfigClass: startSleeptime is set to: %s", this->config->startSleeptime);
+}
+
+//---------------------------------------------------------------------------------------
+// getEndSleeptime
+//
+// gets the time, when the clock should end the sleepmode
+// Format: xx:xx (chararray)
+//
+//---------------------------------------------------------------------------------------
+char* ConfigClass::getEndSleeptime()
+{
+    return this->config->endSleeptime;
+}
+
+//---------------------------------------------------------------------------------------
+// setEndSleeptime
+//
+// sets the time when the clock should end  the sleepmode 
+// param1 (char): chararray containing the timw
+// param2 (int): size of chararray (usally `sizeof(arr)`)
+//
+//---------------------------------------------------------------------------------------
+void ConfigClass::setEndSleeptime(char* endSleeptime, int bufsize)
+{
+    // copy chararray into config struct
+    memcpy(this->config->endSleeptime, endSleeptime, bufsize);
+    Serial.printf("ConfigClass: endSleeptime is set to: %s", this->config->endSleeptime);
+    debugI("ConfigClass: endSleeptime is set to: %s", this->config->endSleeptime);
 }
