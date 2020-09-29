@@ -33,6 +33,9 @@ class TimefunctionsClass
         void timeToStripe(uint8_t, uint8_t);
         bool isInSleeptime();
         bool isInSleeptime(uint8_t, uint8_t);
+
+    private:
+        u_long logTimer = 0;
 };
 
 extern TimefunctionsClass WordclockTime;

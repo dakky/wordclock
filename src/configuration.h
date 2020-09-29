@@ -33,8 +33,10 @@ typedef struct _config_struct
     char ntpServername[25];
     char ntpTimezone[25];
     char hostname[25];
-    char startSleeptime[5];
-    char endSleeptime[5];
+    int  startSleeptimeHour;
+    int  startSleeptimeMinute;
+    int  endSleeptimeHour;
+    int  endSleeptimeMinute;
 } config_struct;
 
 class ConfigClass
@@ -63,10 +65,12 @@ public:
     void  setNtpTimezone(char*,int);
     char* getHostname();
     void  setHostname(char*,int);
-    char* getStartSleeptime();
     void  setStartSleeptime(char*,int);
-    char* getEndSleeptime();
+    int   getStartSleeptimeHour();
+    int   getStartSleeptimeMinute();
     void  setEndSleeptime(char*,int);
+    int   getEndSleeptimeHour();
+    int   getEndSleeptimeMinute();
 
 private:
     void resetAndRestart();

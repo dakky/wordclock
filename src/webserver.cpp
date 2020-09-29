@@ -98,6 +98,7 @@ void setupWebserver()
         if (request->hasParam("start_sleeptime", true))
         {
             String start_sleeptime = request->getParam("start_sleeptime", true)->value().c_str();
+                       
             int str_len = start_sleeptime.length() + 1;
             char buf[str_len];
             start_sleeptime.toCharArray(buf, str_len);
@@ -178,11 +179,11 @@ String webserverProcessHtmlTemplate(const String &var)
     }
     if (var == "CLOCK_START_SLEEPTIME")
     {
-        return String(Config.getStartSleeptime());
+        return String(Config.getStartSleeptimeHour() + ":" + Config.getStartSleeptimeMinute());
     }
     if (var == "CLOCK_END_SLEEPTIME")
     {
-        return String(Config.getEndSleeptime());
+        return String(Config.getEndSleeptimeHour() + ":" + Config.getEndSleeptimeMinute());
     }
     if (var == "NTP_SERVERNAME")
     {

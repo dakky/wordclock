@@ -59,10 +59,8 @@ void ConfigClass::begin()
         Serial.println("Configuration: Initilializing SPIFFS ... Error!");
     }
     Serial.println("Configuration: File System Initialized");
-    // for debugging purposes: create file every startup with default values
-    // this->reset();
-    // this->save();
 
+    this->print();
     this->load();
     this->print();
 }
@@ -101,50 +99,60 @@ void ConfigClass::load()
     // Test if key exists in json, 
     // if yes: Copy values from the JsonDocument to the config object
     // if no: set bolean for restarting the esp after resetting to default values
-    if (doc["ledBrightness"]) {
+    if (doc["ledBrightness"].isNull()) {
+        this->resetAndRestart();
+    } else {
         this->config->ledBrightness = doc["ledBrightness"];
-    } else {
-        this->resetAndRestart();
     }
-    if (doc["ledSimpleColor"]) {
+    if (doc["ledSimpleColor"].isNull()) {
+        this->resetAndRestart();
+    } else {
         strlcpy(this->config->ledSimpleColor, doc["ledSimpleColor"], sizeof(this->config->ledSimpleColor));
-    } else {
-        this->resetAndRestart();
     }
-    if (doc["ledRainbowSpeed"]) {
-            this->config->ledRainbowSpeed = doc["ledRainbowSpeed"];
-    } else {
+    if (doc["ledRainbowSpeed"].isNull()) {
         this->resetAndRestart();
+    } else {
+        this->config->ledRainbowSpeed = doc["ledRainbowSpeed"];
     }
-    if (doc["ledMode"]) {
+    if (doc["ledMode"].isNull()) {
+        this->resetAndRestart();
+    } else {
         this->config->ledMode = doc["ledMode"];
-    } else {
-        this->resetAndRestart();
     }
-    if (doc["ntpServername"]) {
+    if (doc["ntpServername"].isNull()) {
+        this->resetAndRestart();
+    } else {
         strlcpy(this->config->ntpServername, doc["ntpServername"], sizeof(this->config->ntpServername));
-    } else {
-        this->resetAndRestart();
     }
-    if (doc["ntpTimezone"]) {
+    if (doc["ntpTimezone"].isNull()) {
+        this->resetAndRestart();
+    } else {
         strlcpy(this->config->ntpTimezone, doc["ntpTimezone"], sizeof(this->config->ntpTimezone));
-    } else {
-        this->resetAndRestart();
     }
-    if (doc["hostname"]) {
+    if (doc["hostname"].isNull()) {
+        this->resetAndRestart();
+    } else {
         strlcpy(this->config->hostname, doc["hostname"], sizeof(this->config->hostname));
-    } else {
-        this->resetAndRestart();
     }
-    if (doc["startSleeptime"]) {
-        strlcpy(this->config->startSleeptime, doc["startSleeptime"], sizeof(this->config->startSleeptime));
-    } else {
+    if (doc["startSleeptimeHour"].isNull()) {
         this->resetAndRestart();
+    } else {
+        this->config->startSleeptimeHour = doc["startSleeptimeHour"];
     }
-    if (doc["endSleeptime"]) {
-        strlcpy(this->config->endSleeptime, doc["endSleeptime"], sizeof(this->config->endSleeptime));
-    } else {
+    if (doc["startSleeptimeMinute"].isNull()) {
         this->resetAndRestart();
+    } else {
+        this->config->startSleeptimeMinute = doc["startSleeptimeMinute"];
+    }
+    if (doc["endSleeptimeHour"].isNull()) {
+        this->resetAndRestart();
+    } else {
+        this->config->endSleeptimeHour = doc["endSleeptimeHour"];
+    }
+    if (doc["endSleeptimeMinute"].isNull()) {
+        this->resetAndRestart();
+    } else {
+        this->config->endSleeptimeMinute = doc["endSleeptimeMinute"];
     }
 
     file.close();
@@ -168,8 +176,10 @@ void ConfigClass::reset()
     strlcpy(this->config->ntpServername, "europe.pool.ntp.org", sizeof(this->config->ntpServername));
     strlcpy(this->config->ntpTimezone, "Europe/Berlin", sizeof(this->config->ntpTimezone));
     strlcpy(this->config->hostname, "wordclock", sizeof(this->config->hostname));
-    strlcpy(this->config->startSleeptime, "22:00", sizeof(this->config->startSleeptime));
-    strlcpy(this->config->endSleeptime, "05:00", sizeof(this->config->endSleeptime));
+    this->config->startSleeptimeHour = 22;
+    this->config->startSleeptimeMinute = 00;
+    this->config->endSleeptimeHour = 5;
+    this->config->endSleeptimeMinute = 00;
 
     this->save();
 
@@ -206,8 +216,10 @@ void ConfigClass::save()
     doc["ntpServername"] = this->config->ntpServername;
     doc["ntpTimezone"] = this->config->ntpTimezone;
     doc["hostname"] = this->config->hostname;
-    doc["startSleeptime"] = this->config->startSleeptime;
-    doc["endSleeptime"] = this->config->endSleeptime;
+    doc["startSleeptimeHour"] = this->config->startSleeptimeHour;
+    doc["startSleeptimeMinute"] = this->config->startSleeptimeMinute;
+    doc["endSleeptimeHour"] = this->config->endSleeptimeHour;
+    doc["endSleeptimeMinute"] = this->config->endSleeptimeMinute;
 
     // Serialize JSON to file
     if (serializeJson(doc, file) == 0)
@@ -250,7 +262,7 @@ void ConfigClass::resetAndRestart()
 {
     this->reset();
     this->save();
-    ESP.restart();
+    // ESP.restart();
 }
 
 //---------------------------------------------------------------------------------------
@@ -462,18 +474,6 @@ void ConfigClass::setLedRainbowSpeed(byte speed)
 }
 
 //---------------------------------------------------------------------------------------
-// getStartSleeptime
-//
-// gets the time, when the clock should start the sleepmode
-// Format: xx:xx (chararray)
-//
-//---------------------------------------------------------------------------------------
-char* ConfigClass::getStartSleeptime()
-{
-    return this->config->startSleeptime;
-}
-
-//---------------------------------------------------------------------------------------
 // setStartSleeptime
 //
 // sets the time when the clock should start  the sleepmode 
@@ -481,24 +481,50 @@ char* ConfigClass::getStartSleeptime()
 // param2 (int): size of chararray (usally `sizeof(arr)`)
 //
 //---------------------------------------------------------------------------------------
-void ConfigClass::setStartSleeptime(char* startSleeptime, int bufsize)
+void ConfigClass::setStartSleeptime(char* startSleeptime, int buffsize)
 {
-    // copy chararray into config struct
-    memcpy(this->config->startSleeptime, startSleeptime, bufsize);
-    Serial.printf("ConfigClass: startSleeptime is set to: %s", this->config->startSleeptime);
-    debugI("ConfigClass: startSleeptime is set to: %s", this->config->startSleeptime);
+    char* bufferStartHour = new char[2];
+    char* bufferStartMinute = new char[2];
+
+    int begin;
+    
+    begin = 0;
+    for (int i = 0; i < 2; i++) {
+        bufferStartHour[i] = *(startSleeptime + begin + i);
+    }
+    
+    begin = 3;
+    for (int i = 0; i < 2; i++) {
+        bufferStartMinute[i] = *(startSleeptime + begin + i);
+    }
+
+    this->config->startSleeptimeHour = atoi(bufferStartHour); 
+    this->config->startSleeptimeMinute = atoi(bufferStartMinute); 
+
+    Serial.printf("ConfigClass: startSleeptimeHour is set to: %u and startSleeptimeMinute is set to: %u\n", this->config->startSleeptimeHour, this->config->startSleeptimeMinute);
+    debugI("startSleeptimeHour is set to: %u and startSleeptimeMinute is set to: %u", this->config->startSleeptimeHour, this->config->startSleeptimeMinute);
 }
 
 //---------------------------------------------------------------------------------------
-// getEndSleeptime
+// getStartSleeptimeHour
 //
-// gets the time, when the clock should end the sleepmode
-// Format: xx:xx (chararray)
+// gets the HOUR, when the clock should start the sleepmode
 //
 //---------------------------------------------------------------------------------------
-char* ConfigClass::getEndSleeptime()
+int ConfigClass::getStartSleeptimeHour()
 {
-    return this->config->endSleeptime;
+    return this->config->startSleeptimeHour;
+}
+
+//---------------------------------------------------------------------------------------
+// getStartSleeptimeMinute
+//
+// gets the Minute, when the clock should start the sleepmode
+//
+//---------------------------------------------------------------------------------------
+int ConfigClass::getStartSleeptimeMinute()
+{
+    return this->config->startSleeptimeMinute;
 }
 
 //---------------------------------------------------------------------------------------
@@ -511,8 +537,46 @@ char* ConfigClass::getEndSleeptime()
 //---------------------------------------------------------------------------------------
 void ConfigClass::setEndSleeptime(char* endSleeptime, int bufsize)
 {
-    // copy chararray into config struct
-    memcpy(this->config->endSleeptime, endSleeptime, bufsize);
-    Serial.printf("ConfigClass: endSleeptime is set to: %s", this->config->endSleeptime);
-    debugI("ConfigClass: endSleeptime is set to: %s", this->config->endSleeptime);
+    char* bufferEndHour = new char[2];
+    char* bufferEndMinute = new char[2];
+
+    int begin;
+    
+    begin = 0;
+    for (int i = 0; i < 2; i++) {
+        bufferEndHour[i] = *(endSleeptime + begin + i);
+    }
+    
+    begin = 3;
+    for (int i = 0; i < 2; i++) {
+        bufferEndMinute[i] = *(endSleeptime + begin + i);
+    }
+
+    this->config->endSleeptimeHour = atoi(bufferEndHour); 
+    this->config->endSleeptimeMinute = atoi(bufferEndMinute); 
+
+    Serial.printf("ConfigClass: endSleeptimeHour is set to: %u and endSleeptimeMinute is set to: %u\n", this->config->endSleeptimeHour, this->config->endSleeptimeMinute);
+    debugI("endSleeptimeHour is set to: %u and endSleeptimeMinute is set to: %u", this->config->endSleeptimeHour, this->config->endSleeptimeMinute);
+}
+
+//---------------------------------------------------------------------------------------
+// getEndSleeptimeHour
+//
+// gets the HOUR, when the clock should end the sleepmode
+//
+//---------------------------------------------------------------------------------------
+int ConfigClass::getEndSleeptimeHour()
+{
+    return this->config->endSleeptimeHour;
+}
+
+//---------------------------------------------------------------------------------------
+// getEndSleeptimeMinute
+//
+// gets the Minute, when the clock should end the sleepmode
+//
+//---------------------------------------------------------------------------------------
+int ConfigClass::getEndSleeptimeMinute()
+{
+    return this->config->endSleeptimeMinute;
 }

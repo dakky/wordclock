@@ -227,48 +227,47 @@ bool TimefunctionsClass::isInSleeptime(){
 
 bool TimefunctionsClass::isInSleeptime(uint8_t hours, uint8_t minutes)
 {
-    char* startSleeptime = Config.getStartSleeptime();
+    int startHour = Config.getStartSleeptimeHour();
+    int startMinute = Config.getStartSleeptimeMinute();
+    int endHour = Config.getEndSleeptimeHour();
+    int endMinute = Config.getEndSleeptimeMinute();
 
-    char bufferStartHour[2] = { startSleeptime[0], startSleeptime[1] };
-    char bufferStartMinute[2] = { startSleeptime[3], startSleeptime[4] };
-
-    int startHour = atoi(bufferStartHour);
-    int startMinute = atoi(bufferStartMinute);
-
-    char* endSleeptime = Config.getStartSleeptime();
-
-    char bufferEndHour[2] = { endSleeptime[0], endSleeptime[1] };
-    char bufferEndMinute[2] = { endSleeptime[3], endSleeptime[4] };
-
-    int endHour = atoi(bufferEndHour);
-    int endMinute = atoi(bufferEndMinute);
+    bool result = false;
 
     // over midnight
     if (startHour > endHour) {
-        // // hours between startHour and midnight, no need to check minutes
-        if (hours > startHour && hours < 23 && hours != endHour) { return true; }
-        // hour after midnight and before endHour
-        if (hours < endHour && hours != endHour) { return true; } 
-        // hour equals start => checking minutes
-        if (hours == startHour) 
+        if (hours >= startHour && minutes >= startMinute)
         {
-            if (minutes > startMinute) { return true; }
-        }
-        // hour equals end => checking minutes
-        if (hours == endHour) 
+            if (hours <= 23 && minutes <= 59) 
+            {
+                result = true; 
+            }
+        } 
+        else if (hours >= 0 && minutes >= 0)
         {
-            if (minutes < endMinute) { return true; }
+            if (hours <= endHour && minutes <= endMinute) 
+            {
+                result = true; 
+            }
         }
     }
     else
     {
-        // hours between startHour and endHour, no need to check minutes
-        if (hours > startHour && hours < endHour) { return true; }
-        // hour matches startingHour, check minutes
-        if (hours == startHour && minutes > startMinute) {return true; }
-        // hour matches endHour, check minutes again the other way around
-        if (hours == endHour && minutes < endMinute) { return true; }
+        // same days start and end time
+        if (hours >= startHour && minutes >= startMinute)
+        {
+            if (hours <= endHour && minutes <= endMinute) 
+            {
+                result = true; 
+            }
+        }
     }
     
-    return false;
+    // log every minute
+    if (millis() - this->logTimer > 60000) {
+        debugD("Result: %d --- startHours: %d startMinutes: %d endHours: %d endMinutes: %d recentHours: %d recentMinutes: %d", result, startHour, startMinute, endHour, endMinute, hours, minutes);
+        this->logTimer = millis();
+    }
+
+    return result;
 }

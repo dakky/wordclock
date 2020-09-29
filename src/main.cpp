@@ -39,12 +39,14 @@ void loop()
     // otaStartDelay();
     Debug.handle();
     events();         // from ezTime.h: gets ntp time if nessesary
-    WordclockTime.timeToStripe(); // update LEDs on the target array to be lighted up
-    LED.fadeTargetToLive(25); // has to be done here, if called in i.e. timeToStripe it takes to long and the esp crashes
-    FastLED.delay(1000 / FRAMES_PER_SECOND);
-    if (millis() - timercounter > 1000) {
-        bool result=WordclockTime.isInSleeptime();
-        debugI("checked sleep, result is %d", result);
-        timercounter=millis();
+    if (WordclockTime.isInSleeptime()) {
+        yield();
+    } else {
+        // update LEDs on the target array  (wantted state) to be lighted up
+        WordclockTime.timeToStripe(); 
+        // dimming to wanted state
+        LED.fadeTargetToLive(25); 
     }
+
+    FastLED.delay(1000 / FRAMES_PER_SECOND);
 }

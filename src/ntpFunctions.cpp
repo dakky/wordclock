@@ -7,7 +7,7 @@ void setupNtpClock()
 {
     Serial.println("setupNtpClock: Initializing ...");
 
-    Serial.printf("setupNtpClock: Settings NTP server to: %s", Config.getNtpServername());
+    Serial.printf("setupNtpClock: Settings NTP server to: %s\n", Config.getNtpServername());
     
     setServer(Config.getNtpServername());
 
