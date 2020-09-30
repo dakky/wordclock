@@ -16,6 +16,7 @@ void setup()
 {
     // serial port
     Serial.begin(115200);
+    delay(1000);   
     Serial.println();
     Serial.println();
     Serial.println("ESP8266 WordClock setup() begin");
@@ -36,17 +37,26 @@ void loop()
     ArduinoOTA.handle();   // Doing OTA stuff
     if (isOtaInProgress()) // if ota is in progress, skip the rest
         return;
-    // otaStartDelay();
     Debug.handle();
     events();         // from ezTime.h: gets ntp time if nessesary
+
     if (WordclockTime.isInSleeptime()) {
-        yield();
+        LED.blankscreen();
+        LED.fadeTargetToLive(); 
     } else {
-        // update LEDs on the target array  (wantted state) to be lighted up
-        WordclockTime.timeToStripe(); 
-        // dimming to wanted state
-        LED.fadeTargetToLive(25); 
+        // update LEDs on the target array  (wanted state) to be lighted up
+        EVERY_N_MILLISECONDS(1000 / FRAMES_PER_SECOND) 
+        {
+            WordclockTime.timeToStripe(); 
+            // dimming to wanted state
+            LED.fadeTargetToLive(); 
+        }
     }
 
-    FastLED.delay(1000 / FRAMES_PER_SECOND);
+    // EVERY_N_SECONDS(1) {
+    //     int array[] = {min_ONE[0], min_TWO[0], min_THREE[0], min_FOUR[0]};
+    //     for (int i=0; i<4; i++) {
+    //         debugD("word: %d", array[i]);
+    //     }
+    // }
 }

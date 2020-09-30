@@ -238,26 +238,41 @@ bool TimefunctionsClass::isInSleeptime(uint8_t hours, uint8_t minutes)
     if (startHour > endHour) {
         if (hours >= startHour && minutes >= startMinute)
         {
-            if (hours <= 23 && minutes <= 59) 
+            if (hours <= 23) 
             {
-                result = true; 
+                if (minutes <= 59) {
+                    result = true; 
+                }
             }
         } 
         else if (hours >= 0 && minutes >= 0)
         {
-            if (hours <= endHour && minutes <= endMinute) 
+            if (hours <= endHour) 
             {
-                result = true; 
+                if(minutes <= endMinute){
+                    result = true; 
+                }
             }
         }
     }
     else
     {
         // same days start and end time
-        if (hours >= startHour && minutes >= startMinute)
+        // if hours between start and end hour
+        if (hours > startHour && hours < endHour)
         {
-            if (hours <= endHour && minutes <= endMinute) 
-            {
+            result = true;
+        } 
+        // compare minutes if hours match start or end
+        else if (hours == startHour)
+        {
+            if (minutes >= startMinute) {
+                result = true; 
+            }
+        }
+        else if (hours == endHour)
+        {
+            if (minutes <= endMinute) {
                 result = true; 
             }
         }

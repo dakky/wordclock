@@ -31,14 +31,14 @@ class LedFunctionsClass {
         void word2stripe(const int word[], int, CRGB);
         void word2stripe(const int word[], int);
         void blankscreen();
-        void fadeTargetToLive(uint8_t amount = 25);
+        void fadeTargetToLive();
         void switchTargetToLive();
         void printDebugArray();
         bool updatesBlocked();
         void updatesBlocked(bool);
 
     private:
-        void blendIntToInt(uint8_t &cur, const uint8_t, uint8_t);
+        void blendIntToInt(uint8_t &cur, const uint8_t);
 
         CRGB leds_live[NUM_LEDS];
         CRGB leds_target[NUM_LEDS];

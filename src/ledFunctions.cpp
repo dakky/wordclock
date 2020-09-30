@@ -72,7 +72,7 @@ void LedFunctionsClass::begin()
 //---------------------------------------------------------------------------------------
 void LedFunctionsClass::word2stripe(const int word[], int len, CRGB color)
 {
-    // in case the update of die LED Stripe is blocked, quit here
+    // in case the update of the LED Stripe is blocked, quit here
     if (this->updatesBlocked())
         return;
 
@@ -96,8 +96,7 @@ void LedFunctionsClass::word2stripe(const int word[], int len)
     // mode2: rainbowing color
     else if (Config.getLedMode() == 2)
     {
-        color = ColorFromPalette(RainbowColors_p, this->paletteColorIndex);
-        u_long milliseconds;
+        u_long milliseconds = 15000;
 
         // chainging speed from config
         switch (Config.getLedRainbowSpeed())
@@ -135,6 +134,8 @@ void LedFunctionsClass::word2stripe(const int word[], int len)
             this->paletteColorIndex = this->paletteColorIndex + this->paletteColorIndexStepper;
             this->lastAutoColorChange = millis();
         }
+
+        color = ColorFromPalette(RainbowColors_p, this->paletteColorIndex);
     }
 
     this->word2stripe(word, len, color);
@@ -154,6 +155,7 @@ void LedFunctionsClass::blankscreen()
     if (this->updatesBlocked())
         return;
 
+    // fadeToBlackBy( this->leds_live, NUM_LEDS, 20);
     for (int pixel = 0; pixel < NUM_LEDS; pixel++)
     {
         this->leds_target[pixel] = CRGB::Black;
@@ -180,16 +182,19 @@ void LedFunctionsClass::switchTargetToLive()
 // with the array which is actually preseting the LEDs (live)
 // and fills up the brightness array with the information, which LEDs to switch off
 // and which LEDs to switch off
+// 
+// Params: 
+//  amount: numbers of colors to skip forward on the palette
 //---------------------------------------------------------------------------------------
-void LedFunctionsClass::fadeTargetToLive(uint8_t amount)
+void LedFunctionsClass::fadeTargetToLive()
 {
     while (memcmp(this->leds_live, this->leds_target, sizeof(this->leds_live)) != 0)
     {
         for (int pixel = 0; pixel < NUM_LEDS; pixel++)
         {
-            blendIntToInt(this->leds_live[pixel].red, this->leds_target[pixel].red, amount);
-            blendIntToInt(this->leds_live[pixel].green, this->leds_target[pixel].green, amount);
-            blendIntToInt(this->leds_live[pixel].blue, this->leds_target[pixel].blue, amount);
+            blendIntToInt(this->leds_live[pixel].red, this->leds_target[pixel].red);
+            blendIntToInt(this->leds_live[pixel].green, this->leds_target[pixel].green);
+            blendIntToInt(this->leds_live[pixel].blue, this->leds_target[pixel].blue);
         }
         FastLED.delay(10);
     }
@@ -201,8 +206,10 @@ void LedFunctionsClass::fadeTargetToLive(uint8_t amount)
 // Uses FastLED to blend over to the target color. It updates the new value directly
 // in the array with the live pixels
 //
+// Note: no idea what the "scale" param in the scale8_video function really does 
+//
 //---------------------------------------------------------------------------------------
-void LedFunctionsClass::blendIntToInt(uint8_t &cur, const uint8_t target, uint8_t amount)
+void LedFunctionsClass::blendIntToInt(uint8_t &cur, const uint8_t target)
 {
     // LED already has requested color => do nothing
     if (cur == target)
@@ -211,13 +218,13 @@ void LedFunctionsClass::blendIntToInt(uint8_t &cur, const uint8_t target, uint8_
     if (cur < target)
     {
         uint8_t delta = target - cur;
-        delta = scale8_video(delta, amount);
+        delta = scale8_video(delta, 25);
         cur += delta;
     }
     else
     {
         uint8_t delta = cur - target;
-        delta = scale8_video(delta, amount);
+        delta = scale8_video(delta, 25);
         cur -= delta;
     }
 }

@@ -177,13 +177,22 @@ String webserverProcessHtmlTemplate(const String &var)
         color.replace("0x", "#");
         return color;
     }
-    if (var == "CLOCK_START_SLEEPTIME")
+    if (var == "CLOCK_START_SLEEPTIME_HOUR")
     {
-        return String(Config.getStartSleeptimeHour() + ":" + Config.getStartSleeptimeMinute());
+        char buffer[2];
+        return String(sprintf(buffer,"%02d", Config.getStartSleeptimeHour()));;
     }
-    if (var == "CLOCK_END_SLEEPTIME")
+    if (var == "CLOCK_START_SLEEPTIME_MINUTE")
     {
-        return String(Config.getEndSleeptimeHour() + ":" + Config.getEndSleeptimeMinute());
+        return String(printf("%02d", Config.getStartSleeptimeMinute()));
+    }
+    if (var == "CLOCK_END_SLEEPTIME_HOUR")
+    {
+        return String(printf("%02d", Config.getEndSleeptimeHour()));
+    }
+    if (var == "CLOCK_END_SLEEPTIME_MINUTE")
+    {
+        return String(printf("%02d", Config.getEndSleeptimeMinute()));
     }
     if (var == "NTP_SERVERNAME")
     {
@@ -208,7 +217,8 @@ String webserverProcessHtmlTemplate(const String &var)
     // for any message i need to debug without serial connected
     if (var == "ANY_DEBUGMESSAGE")
     {
-        return String("Anymessage: ");
+        debugD("endsleephour: %i endsleepminute: %i", Config.getEndSleeptimeHour(), Config.getEndSleeptimeMinute() );
+        return String(Config.getEndSleeptimeHour());
     }
     return String();
 }
