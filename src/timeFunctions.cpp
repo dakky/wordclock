@@ -221,64 +221,14 @@ void TimefunctionsClass::timeToStripe(uint8_t hours, uint8_t minutes)
 bool TimefunctionsClass::isInSleeptime(){
     uint8_t hours = clockTimezoned.hour();
     uint8_t minutes = clockTimezoned.minute();
+    uint8_t startHour = Config.getStartSleeptimeHour();
+    uint8_t startMinute = Config.getStartSleeptimeMinute();
+    uint8_t endHour = Config.getEndSleeptimeHour();
+    uint8_t endMinute = Config.getEndSleeptimeMinute();
 
-    return this->isInSleeptime(hours, minutes);
-}
+    bool result = InternalTimefunctions.isInSleeptime(hours, minutes, startHour, startMinute, endHour, endMinute );
 
-bool TimefunctionsClass::isInSleeptime(uint8_t hours, uint8_t minutes)
-{
-    int startHour = Config.getStartSleeptimeHour();
-    int startMinute = Config.getStartSleeptimeMinute();
-    int endHour = Config.getEndSleeptimeHour();
-    int endMinute = Config.getEndSleeptimeMinute();
-
-    bool result = false;
-
-    // over midnight
-    if (startHour > endHour) {
-        if (hours >= startHour && minutes >= startMinute)
-        {
-            if (hours <= 23) 
-            {
-                if (minutes <= 59) {
-                    result = true; 
-                }
-            }
-        } 
-        else if (hours >= 0 && minutes >= 0)
-        {
-            if (hours <= endHour) 
-            {
-                if(minutes <= endMinute){
-                    result = true; 
-                }
-            }
-        }
-    }
-    else
-    {
-        // same days start and end time
-        // if hours between start and end hour
-        if (hours > startHour && hours < endHour)
-        {
-            result = true;
-        } 
-        // compare minutes if hours match start or end
-        else if (hours == startHour)
-        {
-            if (minutes >= startMinute) {
-                result = true; 
-            }
-        }
-        else if (hours == endHour)
-        {
-            if (minutes <= endMinute) {
-                result = true; 
-            }
-        }
-    }
-    
-    // log every minute
+        // log every minute
     if (millis() - this->logTimer > 60000) {
         debugD("Result: %d --- startHours: %d startMinutes: %d endHours: %d endMinutes: %d recentHours: %d recentMinutes: %d", result, startHour, startMinute, endHour, endMinute, hours, minutes);
         this->logTimer = millis();

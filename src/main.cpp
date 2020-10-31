@@ -1,3 +1,5 @@
+#ifndef UNIT_TEST
+
 #define FASTLED_ESP8266_RAW_PIN_ORDER
 #define _TASK_SLEEP_ON_IDLE_RUN
 
@@ -60,3 +62,5 @@ void loop()
     //     }
     // }
 }
+
+#endif

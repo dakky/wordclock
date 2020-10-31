@@ -1,7 +1,7 @@
 // ESP8266 Wordclock
 // Copyright (C) 2020 Robert, https://github.com/dakky
 //
-//  See timefunctions.cpp for description.
+//  See InternalTimefunctions.cpp for description.
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,33 +16,19 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef _TIMEFUNCTIONS_H_
-#define _TIMEFUNCTIONS_H_
+#ifndef _INTERNALTIMEFUNCTIONS_H_
+#define _INTERNALTIMEFUNCTIONS_H_
 
-#include <Arduino.h>
-#include "userconfig.h"
-#include "ledFunctions.h"
-#include "words_layout.h"
+#include <cstdint>
 
-// internal (c++ code only, no arduino deps!)
-#include "internal/internalTimefunctions.h"
-
-class TimefunctionsClass
+class InternalTimefunctionsClass
 {
     public:
-        TimefunctionsClass();
-        ~TimefunctionsClass();
-        void timeToStripe();
-        void timeToStripe(uint8_t, uint8_t);
-        bool isInSleeptime();
-        bool isInSleeptime(uint8_t, uint8_t);
-
-    private:
-        u_long logTimer = 0;
+        InternalTimefunctionsClass();
+        ~InternalTimefunctionsClass();
+        bool isInSleeptime(uint8_t, uint8_t, uint8_t, uint8_t, uint8_t, uint8_t);
 };
 
-extern TimefunctionsClass WordclockTime;
-
-
+extern InternalTimefunctionsClass InternalTimefunctions;
 
 #endif
